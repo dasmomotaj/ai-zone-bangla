@@ -18,3 +18,10 @@ Banglay AI shekhar website - Flask + SQLite.
 pip install -r requirements.txt
 python app.py
 Tarpor browser e jan: http://127.0.0.1:5000
+
+## Admin password reset (Render / local)
+- Set env variable `ADMIN_RESET_PASSWORD` (minimum 12 characters).
+- On startup the app hashes it with Werkzeug and updates the `admin` user once.
+- Same value will not reset again on restart (one-time fingerprint record).
+- Short values are rejected with a generic log message; nothing secret is logged.
+- After verifying login, remove the variable and redeploy.

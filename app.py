@@ -1,3 +1,4 @@
+import hashlib
 import os
 import re
 import secrets
@@ -111,6 +112,48 @@ def retire_default_password():
             db.execute("UPDATE admin SET password_hash = ? WHERE username = ?",
                        (generate_password_hash(generate_secure_password()), "admin"))
             db.commit()
+    finally:
+        db.close()
+
+
+ADMIN_RESET_ENV_VAR = "ADMIN_RESET_PASSWORD"
+ADMIN_RESET_MIN_LENGTH = 12
+
+
+def apply_admin_reset_from_env(db_path=None):
+    """One-time admin password reset driven by the ADMIN_RESET_PASSWORD env var.
+
+    Returns "missing", "rejected:short", "no-admin", "already-applied" or "applied".
+    The password and its hash are never logged or returned.
+    """
+    path = db_path or DATABASE
+    new_password = os.environ.get(ADMIN_RESET_ENV_VAR, "")
+    if not new_password:
+        return "missing"
+    if len(new_password) < ADMIN_RESET_MIN_LENGTH:
+        app.logger.warning("Admin password reset rejected: password must be at least 12 characters.")
+        return "rejected:short"
+    fingerprint = hashlib.sha256(new_password.encode("utf-8")).hexdigest()
+    db = sqlite3.connect(path)
+    db.row_factory = sqlite3.Row
+    try:
+        db.execute("CREATE TABLE IF NOT EXISTS app_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
+        admin = db.execute("SELECT * FROM admin WHERE username = ?", ("admin",)).fetchone()
+        if not admin:
+            app.logger.warning("Admin password reset skipped: admin user not found.")
+            return "no-admin"
+        row = db.execute("SELECT value FROM app_meta WHERE key = ?", ("admin_reset_fingerprint",)).fetchone()
+        if row and row["value"] == fingerprint:
+            return "already-applied"
+        db.execute("UPDATE admin SET password_hash = ? WHERE username = ?",
+                   (generate_password_hash(new_password), "admin"))
+        db.execute("INSERT OR REPLACE INTO app_meta (key, value) VALUES (?, ?)",
+                   ("admin_reset_fingerprint", fingerprint))
+        db.commit()
+        count = db.execute("SELECT COUNT(*) FROM admin").fetchone()[0]
+        assert count == 1, "duplicate admin user detected"
+        app.logger.warning("Admin password reset applied.")
+        return "applied"
     finally:
         db.close()
 
@@ -394,6 +437,7 @@ def post_delete(post_id):
 try:
     init_db()
     retire_default_password()
+    apply_admin_reset_from_env()
 except Exception:
     pass
 
