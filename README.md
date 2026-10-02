@@ -12,7 +12,7 @@ Banglay AI shekhar website - Flask + SQLite.
 
 ## Default Admin
 - username: admin
-- password: admin123
+- password: (প্রথম deploy-এ ADMIN_INITIAL_PASSWORD env variable থেকে সেট হয়; পরে /admin/change-password থেকে বদলান)
 
 ## Run
 pip install -r requirements.txt

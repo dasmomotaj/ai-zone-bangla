@@ -1,5 +1,6 @@
 import os
 import re
+import secrets
 import sqlite3
 from datetime import timedelta
 from functools import wraps
@@ -60,8 +61,11 @@ def init_db():
     # default admin
     cur = db.execute("SELECT COUNT(*) FROM admin")
     if cur.fetchone()[0] == 0:
+        initial = os.environ.get("ADMIN_INITIAL_PASSWORD", "")
+        if len(initial) < 12:
+            initial = generate_secure_password()
         db.execute("INSERT INTO admin (username, password_hash) VALUES (?, ?)",
-                   ("admin", generate_password_hash("admin123")))
+                   ("admin", generate_password_hash(initial)))
     # seed tools
     cur = db.execute("SELECT COUNT(*) FROM tools")
     if cur.fetchone()[0] == 0:
@@ -91,6 +95,25 @@ def init_db():
         db.executemany("INSERT INTO posts (title, content) VALUES (?,?)", seed_posts)
     db.commit()
     db.close()
+
+def generate_secure_password(length=16):
+    alphabet = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789!@#$%^&*"
+    return "".join(secrets.choice(alphabet) for _ in range(length))
+
+
+def retire_default_password():
+    """Disable the old default password 'admin123' if it is still active."""
+    db = sqlite3.connect(DATABASE)
+    db.row_factory = sqlite3.Row
+    try:
+        admin = db.execute("SELECT * FROM admin WHERE username = ?", ("admin",)).fetchone()
+        if admin and check_password_hash(admin["password_hash"], "admin123"):
+            db.execute("UPDATE admin SET password_hash = ? WHERE username = ?",
+                       (generate_password_hash(generate_secure_password()), "admin"))
+            db.commit()
+    finally:
+        db.close()
+
 
 # ---------- validation ----------
 def valid_url(u):
@@ -194,7 +217,9 @@ def login():
         password = (request.form.get("password") or "")[:200]
         db = get_db()
         admin = db.execute("SELECT * FROM admin WHERE username = ?", (username,)).fetchone()
-        if admin and check_password_hash(admin["password_hash"], password):
+        if password == "admin123":
+            flash("ডিফল্ট পাসওয়ার্ড নিষ্ক্রিয় করা হয়েছে। নতুন পাসওয়ার্ড ব্যবহার করুন।", "error")
+        elif admin and check_password_hash(admin["password_hash"], password):
             session.clear()
             session["admin_logged_in"] = True
             session["admin_username"] = admin["username"]
@@ -202,6 +227,33 @@ def login():
             return redirect(url_for("admin_dashboard"))
         flash("ভুল ইউজারনেম বা পাসওয়ার্ড।", "error")
     return render_template("login.html")
+
+@app.route("/admin/change-password", methods=["GET", "POST"])
+@login_required
+def change_password():
+    if request.method == "POST":
+        current = (request.form.get("current_password") or "")[:200]
+        new_pw = (request.form.get("new_password") or "")[:200]
+        confirm = (request.form.get("confirm_password") or "")[:200]
+        db = get_db()
+        admin = db.execute("SELECT * FROM admin WHERE username = ?",
+                           (session.get("admin_username"),)).fetchone()
+        if not admin or not check_password_hash(admin["password_hash"], current):
+            flash("বর্তমান পাসওয়ার্ড সঠিক নয়।", "error")
+        elif new_pw != confirm:
+            flash("নতুন পাসওয়ার্ড এবং কনফার্ম পাসওয়ার্ড মিলছে না।", "error")
+        elif len(new_pw) < 12:
+            flash("নতুন পাসওয়ার্ড কমপক্ষে ১২ অক্ষরের হতে হবে।", "error")
+        elif current == new_pw:
+            flash("নতুন পাসওয়ার্ড বর্তমান পাসওয়ার্ড থেকে আলাদা হতে হবে।", "error")
+        else:
+            db.execute("UPDATE admin SET password_hash = ? WHERE username = ?",
+                       (generate_password_hash(new_pw), session.get("admin_username")))
+            db.commit()
+            flash("পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে!", "success")
+            return redirect(url_for("admin_dashboard"))
+    return render_template("admin/change_password.html")
+
 
 @app.route("/logout")
 def logout():
@@ -341,6 +393,7 @@ def post_delete(post_id):
 # __main__ block below is only for local dev.
 try:
     init_db()
+    retire_default_password()
 except Exception:
     pass
 
