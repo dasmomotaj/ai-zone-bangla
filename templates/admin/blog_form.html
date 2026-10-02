@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} | AI Zone বাংলা{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="post" class="form card">
+  <label>শিরোনাম<input type="text" name="title" required maxlength="200" value="{{ post['title'] if post else '' }}"></label>
+  <label>কনটেন্ট<textarea name="content" required rows="10">{{ post['content'] if post else '' }}</textarea></label>
+  <button type="submit" class="btn">সেভ করুন</button>
+  <a href="{{ url_for('admin_dashboard') }}" class="btn outline">বাতিল</a>
+</form>
+{% endblock %}

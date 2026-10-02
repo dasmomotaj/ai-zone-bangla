@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} | AI Zone বাংলা{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="post" class="form card">
+  <label>টুলের নাম<input type="text" name="name" required maxlength="100" value="{{ tool['name'] if tool else '' }}"></label>
+  <label>বর্ণনা<textarea name="description" required maxlength="2000" rows="4">{{ tool['description'] if tool else '' }}</textarea></label>
+  <label>ক্যাটাগরি<select name="category" required>
+    {% for c in categories %}<option value="{{ c }}" {% if tool and tool['category']==c %}selected{% endif %}>{{ c }}</option>{% endfor %}
+  </select></label>
+  <label>অফিসিয়াল লিংক<input type="url" name="url" required maxlength="500" placeholder="https://..." value="{{ tool['url'] if tool else '' }}"></label>
+  <button type="submit" class="btn">সেভ করুন</button>
+  <a href="{{ url_for('admin_dashboard') }}" class="btn outline">বাতিল</a>
+</form>
+{% endblock %}

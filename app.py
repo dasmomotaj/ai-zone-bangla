@@ -1,0 +1,342 @@
+import os
+import re
+import sqlite3
+from datetime import timedelta
+from functools import wraps
+from urllib.parse import urlparse
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort
+from werkzeug.security import generate_password_hash, check_password_hash
+
+app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "ai-zone-bangla-secret-key-change-me")
+app.permanent_session_lifetime = timedelta(minutes=30)
+DATABASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "aizonabangla.db")
+
+CATEGORIES = ["AI Chat", "AI Writing", "AI Image", "AI Video", "AI Design"]
+
+# ---------- DB helpers ----------
+def get_db():
+    if "db" not in g:
+        g.db = sqlite3.connect(DATABASE)
+        g.db.row_factory = sqlite3.Row
+    return g.db
+
+@app.teardown_appcontext
+def close_db(e=None):
+    db = g.pop("db", None)
+    if db is not None:
+        db.close()
+
+def init_db():
+    db = sqlite3.connect(DATABASE)
+    db.row_factory = sqlite3.Row
+    db.executescript("""
+    CREATE TABLE IF NOT EXISTS tools (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL,
+        category TEXT NOT NULL,
+        url TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS posts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE TABLE IF NOT EXISTS messages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        message TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE TABLE IF NOT EXISTS admin (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL
+    );
+    """)
+    # default admin
+    cur = db.execute("SELECT COUNT(*) FROM admin")
+    if cur.fetchone()[0] == 0:
+        db.execute("INSERT INTO admin (username, password_hash) VALUES (?, ?)",
+                   ("admin", generate_password_hash("admin123")))
+    # seed tools
+    cur = db.execute("SELECT COUNT(*) FROM tools")
+    if cur.fetchone()[0] == 0:
+        seed_tools = [
+            ("ChatGPT", "জনপ্রিয় AI চ্যাটবট। লেখা, কোডিং, প্রশ্নোত্তর সব কিছুর জন্য সেরা।", "AI Chat", "https://chat.openai.com"),
+            ("Gemini", "Google-এর AI চ্যাট সহকারী। বাংলা ভাষায়ও ভালো উত্তর দেয়।", "AI Chat", "https://gemini.google.com"),
+            ("Claude", "Anthropic-এর নিরাপদ ও বুদ্ধিমান AI চ্যাটবট।", "AI Chat", "https://claude.ai"),
+            ("Jasper", "ব্লগ, মার্কেটিং কপি ও SEO লেখার জন্য AI রাইটিং টুল।", "AI Writing", "https://www.jasper.ai"),
+            ("Copy.ai", "সহজে বাংলা ও ইংরেজিতে কনটেন্ট লেখার AI টুল।", "AI Writing", "https://www.copy.ai"),
+            ("Midjourney", "টেক্সট থেকে অসাধারণ ছবি বানানোর AI টুল।", "AI Image", "https://www.midjourney.com"),
+            ("DALL-E 3", "OpenAI-এর টেক্সট-টু-ইমেজ জেনারেটর।", "AI Image", "https://openai.com/dall-e-3"),
+            ("Leonardo AI", "ফ্রি AI ছবি ও ডিজাইন তৈরির চমৎকার টুল।", "AI Image", "https://leonardo.ai"),
+            ("Runway", "টেক্সট ও ছবি থেকে AI ভিডিও বানানোর সেরা প্ল্যাটফর্ম।", "AI Video", "https://runwayml.com"),
+            ("Pictory", "লেখা থেকে স্বয়ংক্রিয়ভাবে ভিডিও তৈরি করে।", "AI Video", "https://pictory.ai"),
+            ("Canva AI", "ডিজাইন, প্রেজেন্টেশন ও সোশ্যাল মিডিয়া পোস্টের জন্য AI ফিচারসহ।", "AI Design", "https://www.canva.com"),
+            ("Adobe Firefly", "Adobe-এর AI ডিজাইন ও ইমেজ টুল।", "AI Design", "https://firefly.adobe.com"),
+        ]
+        db.executemany("INSERT INTO tools (name, description, category, url) VALUES (?,?,?,?)", seed_tools)
+    # seed posts
+    cur = db.execute("SELECT COUNT(*) FROM posts")
+    if cur.fetchone()[0] == 0:
+        seed_posts = [
+            ("AI দিয়ে বাংলা ব্লগ লেখার ৫টি সহজ উপায়", "AI টুল ব্যবহার করে আপনি সহজেই বাংলা ব্লগ লিখতে পারেন।\n\n১. প্রথমে ChatGPT বা Gemini-তে বিষয় লিখুন।\n২. বাংলায় লিখতে বলুন।\n৩. খসড়া এডিট করুন।\n৪. Copy.ai দিয়ে শিরোনাম বানান।\n৫. Canva দিয়ে কভার ডিজাইন করুন।\n\nমনে রাখবেন: AI-এর লেখা সবসময় নিজে যাচাই করে প্রকাশ করবেন।"),
+            ("ফ্রিতে AI ছবি বানানো শিখুন", "Leonardo AI বা Bing Image Creator দিয়ে ফ্রিতে ছবি বানাতে পারেন।\n\nধাপ ১: সাইটে ফ্রি অ্যাকাউন্ট খুলুন।\nধাপ ২: বাংলায় বা ইংরেজিতে prompt লিখুন, যেমন 'a beautiful village in Bangladesh, sunset'।\nধাপ ৩: Generate চাপুন ও ডাউনলোড করুন।"),
+            ("AI ভিডিও বানিয়ে ইউটিউব থেকে আয়", "Pictory বা Runway দিয়ে স্ক্রিপ্ট থেকে ভিডিও বানিয়ে ইউটিউবে আপলোড করতে পারেন। ভয়েসওভারের জন্য ElevenLabs ব্যবহার করুন।"),
+        ]
+        db.executemany("INSERT INTO posts (title, content) VALUES (?,?)", seed_posts)
+    db.commit()
+    db.close()
+
+# ---------- validation ----------
+def valid_url(u):
+    try:
+        p = urlparse(u.strip())
+        return p.scheme in ("http", "https") and "." in p.netloc
+    except Exception:
+        return False
+
+def valid_email(e):
+    return re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", e or "") is not None
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get("admin_logged_in"):
+            flash("অনুগ্রহ করে লগইন করুন।", "error")
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+
+# ---------- public routes ----------
+@app.route("/")
+def index():
+    db = get_db()
+    tools = db.execute("SELECT * FROM tools ORDER BY id DESC LIMIT 6").fetchall()
+    posts = db.execute("SELECT * FROM posts ORDER BY id DESC LIMIT 3").fetchall()
+    return render_template("index.html", tools=tools, posts=posts)
+
+@app.route("/tools")
+def tools():
+    q = (request.args.get("q") or "").strip()[:100]
+    cat = (request.args.get("category") or "").strip()
+    db = get_db()
+    query = "SELECT * FROM tools WHERE 1=1"
+    params = []
+    if cat and cat in CATEGORIES:
+        query += " AND category = ?"
+        params.append(cat)
+    if q:
+        query += " AND (name LIKE ? OR description LIKE ?)"
+        params.extend([f"%{q}%", f"%{q}%"])
+    query += " ORDER BY id DESC"
+    tools = db.execute(query, params).fetchall()
+    return render_template("tools.html", tools=tools, categories=CATEGORIES, q=q, selected_cat=cat)
+
+@app.route("/tutorials")
+def tutorials():
+    return render_template("tutorials.html")
+
+@app.route("/blog")
+def blog():
+    db = get_db()
+    posts = db.execute("SELECT * FROM posts ORDER BY id DESC").fetchall()
+    return render_template("blog.html", posts=posts)
+
+@app.route("/blog/<int:post_id>")
+def blog_detail(post_id):
+    db = get_db()
+    post = db.execute("SELECT * FROM posts WHERE id = ?", (post_id,)).fetchone()
+    if not post:
+        abort(404)
+    others = db.execute("SELECT * FROM posts WHERE id != ? ORDER BY id DESC LIMIT 3", (post_id,)).fetchall()
+    return render_template("blog_detail.html", post=post, others=others)
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    if request.method == "POST":
+        name = (request.form.get("name") or "").strip()[:100]
+        email = (request.form.get("email") or "").strip()[:100]
+        message = (request.form.get("message") or "").strip()[:2000]
+        if len(name) < 2:
+            flash("সঠিক নাম লিখুন।", "error")
+        elif not valid_email(email):
+            flash("সঠিক ইমেইল দিন।", "error")
+        elif len(message) < 5:
+            flash("মেসেজ কমপক্ষে ৫ অক্ষরের হতে হবে।", "error")
+        else:
+            db = get_db()
+            db.execute("INSERT INTO messages (name, email, message) VALUES (?,?,?)", (name, email, message))
+            db.commit()
+            flash("আপনার মেসেজ পাঠানো হয়েছে। ধন্যবাদ!", "success")
+            return redirect(url_for("contact"))
+    return render_template("contact.html")
+
+# ---------- auth / admin ----------
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if session.get("admin_logged_in"):
+        return redirect(url_for("admin_dashboard"))
+    if request.method == "POST":
+        username = (request.form.get("username") or "").strip()[:50]
+        password = (request.form.get("password") or "")[:200]
+        db = get_db()
+        admin = db.execute("SELECT * FROM admin WHERE username = ?", (username,)).fetchone()
+        if admin and check_password_hash(admin["password_hash"], password):
+            session.clear()
+            session["admin_logged_in"] = True
+            session["admin_username"] = admin["username"]
+            flash("স্বাগতম, " + admin["username"] + "!", "success")
+            return redirect(url_for("admin_dashboard"))
+        flash("ভুল ইউজারনেম বা পাসওয়ার্ড।", "error")
+    return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("লগআউট সফল হয়েছে।", "success")
+    return redirect(url_for("index"))
+
+@app.route("/admin")
+@login_required
+def admin_dashboard():
+    db = get_db()
+    tools = db.execute("SELECT * FROM tools ORDER BY id DESC").fetchall()
+    posts = db.execute("SELECT * FROM posts ORDER BY id DESC").fetchall()
+    messages = db.execute("SELECT * FROM messages ORDER BY id DESC LIMIT 10").fetchall()
+    counts = {
+        "tools": db.execute("SELECT COUNT(*) FROM tools").fetchone()[0],
+        "posts": db.execute("SELECT COUNT(*) FROM posts").fetchone()[0],
+        "messages": db.execute("SELECT COUNT(*) FROM messages").fetchone()[0],
+    }
+    return render_template("admin/dashboard.html", tools=tools, posts=posts, messages=messages, counts=counts)
+
+# tools CRUD
+@app.route("/admin/tools/new", methods=["GET", "POST"])
+@login_required
+def tool_new():
+    if request.method == "POST":
+        name = (request.form.get("name") or "").strip()[:100]
+        description = (request.form.get("description") or "").strip()[:2000]
+        category = (request.form.get("category") or "").strip()
+        url = (request.form.get("url") or "").strip()[:500]
+        if len(name) < 2:
+            flash("টুলের নাম কমপক্ষে ২ অক্ষর হতে হবে।", "error")
+        elif len(description) < 5:
+            flash("বর্ণনা কমপক্ষে ৫ অক্ষর হতে হবে।", "error")
+        elif category not in CATEGORIES:
+            flash("সঠিক ক্যাটাগরি বেছে নিন।", "error")
+        elif not valid_url(url):
+            flash("সঠিক website link দিন (https:// সহ)।", "error")
+        else:
+            db = get_db()
+            db.execute("INSERT INTO tools (name, description, category, url) VALUES (?,?,?,?)", (name, description, category, url))
+            db.commit()
+            flash("টুল যোগ করা হয়েছে!", "success")
+            return redirect(url_for("admin_dashboard"))
+        return render_template("admin/tool_form.html", categories=CATEGORIES, tool=request.form, title="নতুন টুল যোগ করুন")
+    return render_template("admin/tool_form.html", categories=CATEGORIES, tool={}, title="নতুন টুল যোগ করুন")
+
+@app.route("/admin/tools/edit/<int:tool_id>", methods=["GET", "POST"])
+@login_required
+def tool_edit(tool_id):
+    db = get_db()
+    tool = db.execute("SELECT * FROM tools WHERE id = ?", (tool_id,)).fetchone()
+    if not tool:
+        abort(404)
+    if request.method == "POST":
+        name = (request.form.get("name") or "").strip()[:100]
+        description = (request.form.get("description") or "").strip()[:2000]
+        category = (request.form.get("category") or "").strip()
+        url = (request.form.get("url") or "").strip()[:500]
+        if len(name) < 2:
+            flash("টুলের নাম কমপক্ষে ২ অক্ষর হতে হবে।", "error")
+        elif len(description) < 5:
+            flash("বর্ণনা কমপক্ষে ৫ অক্ষর হতে হবে।", "error")
+        elif category not in CATEGORIES:
+            flash("সঠিক ক্যাটাগরি বেছে নিন।", "error")
+        elif not valid_url(url):
+            flash("সঠিক website link দিন (https:// সহ)।", "error")
+        else:
+            db.execute("UPDATE tools SET name=?, description=?, category=?, url=? WHERE id=?", (name, description, category, url, tool_id))
+            db.commit()
+            flash("টুল আপডেট হয়েছে!", "success")
+            return redirect(url_for("admin_dashboard"))
+        return render_template("admin/tool_form.html", categories=CATEGORIES, tool=request.form, title="টুল এডিট করুন")
+    return render_template("admin/tool_form.html", categories=CATEGORIES, tool=tool, title="টুল এডিট করুন")
+
+@app.route("/admin/tools/delete/<int:tool_id>", methods=["POST"])
+@login_required
+def tool_delete(tool_id):
+    db = get_db()
+    db.execute("DELETE FROM tools WHERE id = ?", (tool_id,))
+    db.commit()
+    flash("টুল ডিলিট করা হয়েছে।", "success")
+    return redirect(url_for("admin_dashboard"))
+
+# posts CRUD
+@app.route("/admin/posts/new", methods=["GET", "POST"])
+@login_required
+def post_new():
+    if request.method == "POST":
+        title = (request.form.get("title") or "").strip()[:200]
+        content = (request.form.get("content") or "").strip()[:20000]
+        if len(title) < 3:
+            flash("শিরোনাম কমপক্ষে ৩ অক্ষর হতে হবে।", "error")
+        elif len(content) < 10:
+            flash("কনটেন্ট কমপক্ষে ১০ অক্ষর হতে হবে।", "error")
+        else:
+            db = get_db()
+            db.execute("INSERT INTO posts (title, content) VALUES (?,?)", (title, content))
+            db.commit()
+            flash("ব্লগ পোস্ট যোগ হয়েছে!", "success")
+            return redirect(url_for("admin_dashboard"))
+        return render_template("admin/blog_form.html", post=request.form, title="নতুন ব্লগ পোস্ট")
+    return render_template("admin/blog_form.html", post={}, title="নতুন ব্লগ পোস্ট")
+
+@app.route("/admin/posts/edit/<int:post_id>", methods=["GET", "POST"])
+@login_required
+def post_edit(post_id):
+    db = get_db()
+    post = db.execute("SELECT * FROM posts WHERE id = ?", (post_id,)).fetchone()
+    if not post:
+        abort(404)
+    if request.method == "POST":
+        title = (request.form.get("title") or "").strip()[:200]
+        content = (request.form.get("content") or "").strip()[:20000]
+        if len(title) < 3:
+            flash("শিরোনাম কমপক্ষে ৩ অক্ষর হতে হবে।", "error")
+        elif len(content) < 10:
+            flash("কনটেন্ট কমপক্ষে ১০ অক্ষর হতে হবে।", "error")
+        else:
+            db.execute("UPDATE posts SET title=?, content=? WHERE id=?", (title, content, post_id))
+            db.commit()
+            flash("পোস্ট আপডেট হয়েছে!", "success")
+            return redirect(url_for("admin_dashboard"))
+        return render_template("admin/blog_form.html", post=request.form, title="পোস্ট এডিট করুন")
+    return render_template("admin/blog_form.html", post=post, title="পোস্ট এডিট করুন")
+
+@app.route("/admin/posts/delete/<int:post_id>", methods=["POST"])
+@login_required
+def post_delete(post_id):
+    db = get_db()
+    db.execute("DELETE FROM posts WHERE id = ?", (post_id,))
+    db.commit()
+    flash("পোস্ট ডিলিট করা হয়েছে।", "success")
+    return redirect(url_for("admin_dashboard"))
+
+if __name__ == "__main__":
+    init_db()
+    app.run(host="0.0.0.0", port=5000, debug=True)

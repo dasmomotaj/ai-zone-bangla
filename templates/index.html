@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}হোম | AI Zone বাংলা{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>বাংলায় AI শিখুন সহজে 🇧🇩</h1>
+  <p>সেরা AI টুলস, টিউটোরিয়াল ও ব্লগ — সব এক জায়গায়।</p>
+  <form action="{{ url_for('tools') }}" method="get" class="search-bar">
+    <input type="text" name="q" placeholder="টুল খুঁজুন... (যেমন: ছবি, ভিডিও)">
+    <button type="submit">খুঁজুন</button>
+  </form>
+  <div class="hero-btns">
+    <a href="{{ url_for('tools') }}" class="btn">সব AI টুলস দেখুন</a>
+    <a href="{{ url_for('tutorials') }}" class="btn outline">টিউটোরিয়াল</a>
+  </div>
+</section>
+<section>
+  <h2>⭐ জনপ্রিয় AI টুলস</h2>
+  <div class="grid">
+    {% for t in tools %}
+    <div class="card">
+      <span class="badge">{{ t['category'] }}</span>
+      <h3>{{ t['name'] }}</h3>
+      <p>{{ t['description'] }}</p>
+      <a href="{{ t['url'] }}" target="_blank" rel="noopener" class="btn-sm">অফিসিয়াল সাইট →</a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+<section>
+  <h2>📝 সাম্প্রতিক ব্লগ</h2>
+  <div class="grid">
+    {% for p in posts %}
+    <div class="card">
+      <h3>{{ p['title'] }}</h3>
+      <p>{{ p['content'][:120] }}...</p>
+      <a href="{{ url_for('blog_detail', post_id=p['id']) }}" class="btn-sm">পড়ুন →</a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+<section class="cats">
+  <h2>📂 ক্যাটাগরি অনুযায়ী দেখুন</h2>
+  <div class="cat-list">
+    <a href="{{ url_for('tools', category='AI Chat') }}">💬 AI Chat</a>
+    <a href="{{ url_for('tools', category='AI Writing') }}">✍️ AI Writing</a>
+    <a href="{{ url_for('tools', category='AI Image') }}">🎨 AI Image</a>
+    <a href="{{ url_for('tools', category='AI Video') }}">🎬 AI Video</a>
+    <a href="{{ url_for('tools', category='AI Design') }}">🖌️ AI Design</a>
+  </div>
+</section>
+{% endblock %}

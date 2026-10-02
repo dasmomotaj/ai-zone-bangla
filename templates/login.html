@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}অ্যাডমিন লগইন | AI Zone বাংলা{% endblock %}
+{% block content %}
+<h1>🔐 অ্যাডমিন লগইন</h1>
+<p class="muted">ডিফল্ট: <code>admin</code> / <code>admin123</code> (প্রথম লগইনের পর বদলে নিন)</p>
+<form method="post" class="form card">
+  <label>ইউজারনেম<input type="text" name="username" required maxlength="50"></label>
+  <label>পাসওয়ার্ড<input type="password" name="password" required></label>
+  <button type="submit" class="btn">লগইন</button>
+</form>
+{% endblock %}

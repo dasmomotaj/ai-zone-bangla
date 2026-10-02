@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}AI টুলস | AI Zone বাংলা{% endblock %}
+{% block content %}
+<h1>🛠️ সব AI টুলস</h1>
+<form method="get" class="filter-bar">
+  <input type="text" name="q" value="{{ q }}" placeholder="সার্চ করুন...">
+  <select name="category">
+    <option value="">সব ক্যাটাগরি</option>
+    {% for c in categories %}
+    <option value="{{ c }}" {% if selected_cat==c %}selected{% endif %}>{{ c }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">ফিল্টার</button>
+</form>
+<p class="muted">{{ tools|length }}টি টুল পাওয়া গেছে</p>
+<div class="grid">
+  {% for t in tools %}
+  <div class="card">
+    <span class="badge">{{ t['category'] }}</span>
+    <h3>{{ t['name'] }}</h3>
+    <p>{{ t['description'] }}</p>
+    <a href="{{ t['url'] }}" target="_blank" rel="noopener" class="btn-sm">অফিসিয়াল সাইট →</a>
+  </div>
+  {% else %}
+  <p>কোনো টুল পাওয়া যায়নি। অন্য কিছু লিখে খুঁজুন।</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ post['title'] }} | AI Zone বাংলা{% endblock %}
+{% block content %}
+<article class="card detail">
+  <h1>{{ post['title'] }}</h1>
+  <small class="muted">{{ post['created_at'] }}</small>
+  <p style="white-space:pre-line">{{ post['content'] }}</p>
+  <a href="{{ url_for('blog') }}" class="btn-sm">← সব পোস্ট</a>
+</article>
+{% if others %}
+<h2>আরও পড়ুন</h2>
+<div class="grid">
+  {% for p in others %}
+  <div class="card"><h3>{{ p['title'] }}</h3><a href="{{ url_for('blog_detail', post_id=p['id']) }}" class="btn-sm">পড়ুন →</a></div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

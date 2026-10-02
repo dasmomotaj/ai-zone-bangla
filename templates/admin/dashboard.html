@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}ড্যাশবোর্ড | AI Zone বাংলা{% endblock %}
+{% block content %}
+<h1>⚙️ অ্যাডমিন ড্যাশবোর্ড</h1>
+<p class="muted">স্বাগতম, {{ session.get('admin_username') }}!</p>
+<div class="stats">
+  <div class="stat">🛠️<b>{{ counts.tools }}</b><span>টুলস</span></div>
+  <div class="stat">📝<b>{{ counts.posts }}</b><span>পোস্ট</span></div>
+  <div class="stat">📩<b>{{ counts.messages }}</b><span>মেসেজ</span></div>
+</div>
+<div class="admin-actions">
+  <a href="{{ url_for('tool_new') }}" class="btn">+ নতুন টুল</a>
+  <a href="{{ url_for('post_new') }}" class="btn">+ নতুন পোস্ট</a>
+</div>
+<h2>AI টুলস ({{ tools|length }})</h2>
+<div class="table-wrap"><table>
+<tr><th>নাম</th><th>ক্যাটাগরি</th><th>অ্যাকশন</th></tr>
+{% for t in tools %}
+<tr><td>{{ t['name'] }}</td><td>{{ t['category'] }}</td>
+<td class="nowrap">
+<a href="{{ url_for('tool_edit', tool_id=t['id']) }}" class="btn-sm">এডিট</a>
+<form action="{{ url_for('tool_delete', tool_id=t['id']) }}" method="post" style="display:inline" onsubmit="return confirm('ডিলিট করবেন?')"><button type="submit" class="btn-sm danger">ডিলিট</button></form>
+</td></tr>
+{% endfor %}
+</table></div>
+<h2>ব্লগ পোস্ট ({{ posts|length }})</h2>
+<div class="table-wrap"><table>
+<tr><th>শিরোনাম</th><th>অ্যাকশন</th></tr>
+{% for p in posts %}
+<tr><td>{{ p['title'] }}</td>
+<td class="nowrap">
+<a href="{{ url_for('post_edit', post_id=p['id']) }}" class="btn-sm">এডিট</a>
+<form action="{{ url_for('post_delete', post_id=p['id']) }}" method="post" style="display:inline" onsubmit="return confirm('ডিলিট করবেন?')"><button type="submit" class="btn-sm danger">ডিলিট</button></form>
+</td></tr>
+{% endfor %}
+</table></div>
+<h2>সাম্প্রতিক মেসেজ</h2>
+{% for m in messages %}
+<div class="card"><b>{{ m['name'] }}</b> <small class="muted">{{ m['email'] }} | {{ m['created_at'] }}</small><p>{{ m['message'] }}</p></div>
+{% else %}<p class="muted">কোনো মেসেজ নেই।</p>{% endfor %}
+{% endblock %}
