@@ -15,7 +15,18 @@ app.secret_key = os.environ.get("SECRET_KEY", "ai-zone-bangla-secret-key-change-
 app.permanent_session_lifetime = timedelta(minutes=30)
 # Trust Render/Cloudflare proxy headers so request.host_url reflects the public domain.
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
-DATABASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "aizonabangla.db")
+_APP_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+def resolve_database_path(base_dir=None):
+    """Database file location. Set DB_DIR env var to a Render Persistent Disk
+    mount path (e.g. /var/data) so data survives redeploys."""
+    directory = base_dir or os.environ.get("DB_DIR", _APP_DIR)
+    os.makedirs(directory, exist_ok=True)
+    return os.path.join(directory, "aizonabangla.db")
+
+
+DATABASE = resolve_database_path()
 
 CATEGORIES = ["AI Chat", "AI Writing", "AI Image", "AI Video", "AI Design"]
 

@@ -25,3 +25,8 @@ Tarpor browser e jan: http://127.0.0.1:5000
 - Same value will not reset again on restart (one-time fingerprint record).
 - Short values are rejected with a generic log message; nothing secret is logged.
 - After verifying login, remove the variable and redeploy.
+
+## Data persistence (Render)
+- By default the SQLite file lives next to `app.py`.
+- Set env variable `DB_DIR` to a Render Persistent Disk mount path (e.g. `/var/data`) so tools, posts and the admin account survive redeploys.
+- Without a disk, redeploys start from a fresh seeded database.
