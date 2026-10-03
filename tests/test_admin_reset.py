@@ -107,8 +107,23 @@ class AdminResetTest(unittest.TestCase):
         A.apply_admin_reset_from_env(self.db_path)
         A.app.testing = True
         client = A.app.test_client()
-        resp = client.post("/login", data={"username": "admin", "password": NEW_PASSWORD},
-                           follow_redirects=False)
+        with client.session_transaction() as sess:
+            csrf_token = sess.get("_csrf_token")
+
+        if not csrf_token:
+            client.get("/login")
+            with client.session_transaction() as sess:
+                csrf_token = sess.get("_csrf_token")
+
+        resp = client.post(
+            "/login",
+            data={
+                "username": "admin",
+                "password": NEW_PASSWORD,
+                "_csrf_token": csrf_token,
+            },
+            follow_redirects=False,
+        )
         self.assertEqual(resp.status_code, 302)
         self.assertIn("/admin", resp.headers.get("Location", ""))
 

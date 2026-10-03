@@ -1,4 +1,5 @@
 import hashlib
+import hmac
 import os
 import re
 import secrets
@@ -11,8 +12,22 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "ai-zone-bangla-secret-key-change-me")
+
+SECRET_KEY = os.environ.get("SECRET_KEY")
+
+# Production deployments must provide a strong SECRET_KEY.
+# Tests/local development may use the non-secret fallback.
+if not SECRET_KEY and os.environ.get("RENDER"):
+    raise RuntimeError("SECRET_KEY must be set in production")
+
+app.secret_key = SECRET_KEY or "dev-only-secret-key"
 app.permanent_session_lifetime = timedelta(minutes=30)
+
+app.config.update(
+    SESSION_COOKIE_SECURE=not app.debug,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+)
 # Trust Render/Cloudflare proxy headers so request.host_url reflects the public domain.
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
 _APP_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -198,9 +213,33 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated
 
+def get_csrf_token():
+    token = session.get("_csrf_token")
+    if not token:
+        token = secrets.token_urlsafe(32)
+        session["_csrf_token"] = token
+    return token
+
+
+@app.context_processor
+def inject_csrf_token():
+    return {"csrf_token": get_csrf_token()}
+
+
 @app.before_request
 def make_session_permanent():
     session.permanent = True
+
+
+@app.before_request
+def csrf_protect():
+    if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
+        token = session.get("_csrf_token")
+        submitted = request.form.get("_csrf_token") or request.headers.get("X-CSRF-Token")
+        if not token or not submitted or not hmac.compare_digest(token, submitted):
+            abort(400)
+
+
 
 # ---------- public routes ----------
 @app.route("/")
@@ -338,7 +377,7 @@ def change_password():
     return render_template("admin/change_password.html")
 
 
-@app.route("/logout")
+@app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
     flash("লগআউট সফল হয়েছে।", "success")

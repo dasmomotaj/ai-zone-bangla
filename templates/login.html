@@ -4,6 +4,7 @@
 <h1>🔐 অ্যাডমিন লগইন</h1>
 <p class="muted">শুধুমাত্র অনুমোদিত অ্যাডমিন লগইন করতে পারবেন।</p>
 <form method="post" class="form card">
+  <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
   <label>ইউজারনেম<input type="text" name="username" required maxlength="50"></label>
   <label>পাসওয়ার্ড<input type="password" name="password" required></label>
   <button type="submit" class="btn">লগইন</button>

@@ -4,6 +4,7 @@
 {% block content %}
 <h1>📩 যোগাযোগ করুন</h1>
 <form method="post" class="form card">
+  <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
   <label>আপনার নাম<input type="text" name="name" required maxlength="100" placeholder="আপনার নাম"></label>
   <label>ইমেইল<input type="email" name="email" required maxlength="100" placeholder="you@email.com"></label>
   <label>মেসেজ<textarea name="message" required maxlength="2000" rows="5" placeholder="আপনার মতামত লিখুন..."></textarea></label>

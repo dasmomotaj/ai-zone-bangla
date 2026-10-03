@@ -43,7 +43,10 @@
       <span class="nav-actions">
       {% if session.get('admin_logged_in') %}
       <a href="{{ url_for('admin_dashboard') }}" class="btn-sm">ড্যাশবোর্ড</a>
-      <a href="{{ url_for('logout') }}" class="btn-sm">লগআউট</a>
+      <form action="{{ url_for('logout') }}" method="post" style="display:inline">
+  <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+  <button type="submit" class="btn-sm">লগআউট</button>
+</form>
       {% else %}
       <a href="{{ url_for('login') }}" class="btn-sm">লগইন</a>
       {% endif %}
