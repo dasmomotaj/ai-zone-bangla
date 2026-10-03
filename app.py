@@ -8,10 +8,13 @@ from functools import wraps
 from urllib.parse import urlparse
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort, Response
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "ai-zone-bangla-secret-key-change-me")
 app.permanent_session_lifetime = timedelta(minutes=30)
+# Trust Render/Cloudflare proxy headers so request.host_url reflects the public domain.
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
 DATABASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "aizonabangla.db")
 
 CATEGORIES = ["AI Chat", "AI Writing", "AI Image", "AI Video", "AI Design"]
