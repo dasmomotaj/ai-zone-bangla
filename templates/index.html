@@ -1,9 +1,11 @@
 {% extends "base.html" %}
+{% block meta_desc %}বাংলায় AI শেখার সেরা ঠিকানা — সেরা AI টুলস, টিউটোরিয়াল ও ব্লগ সব এক জায়গায়।{% endblock %}
 {% block title %}হোম | AI Zone বাংলা{% endblock %}
 {% block content %}
 <section class="hero">
-  <h1>বাংলায় AI শিখুন সহজে 🇧🇩</h1>
-  <p>সেরা AI টুলস, টিউটোরিয়াল ও ব্লগ — সব এক জায়গায়।</p>
+  <span class="eyebrow">✨ বাংলায় AI শেখার সেরা ঠিকানা</span>
+  <h1>বাংলায় <span class="grad">AI শিখুন</span> সহজে 🇧🇩</h1>
+  <p class="lead">সেরা AI টুলস, টিউটোরিয়াল ও ব্লগ — সব এক জায়গায়।</p>
   <form action="{{ url_for('tools') }}" method="get" class="search-bar">
     <input type="text" name="q" placeholder="টুল খুঁজুন... (যেমন: ছবি, ভিডিও)">
     <button type="submit">খুঁজুন</button>
@@ -12,9 +14,14 @@
     <a href="{{ url_for('tools') }}" class="btn">সব AI টুলস দেখুন</a>
     <a href="{{ url_for('tutorials') }}" class="btn outline">টিউটোরিয়াল</a>
   </div>
+  <div class="hero-stats">
+    <span><b>12+</b>সেরা AI টুলস</span>
+    <span><b>৫টি</b>ক্যাটাগরি</span>
+    <span><b>১০০%</b>বাংলায়</span>
+  </div>
 </section>
 <section>
-  <h2>⭐ জনপ্রিয় AI টুলস</h2>
+  <h2 class="sec-title">⭐ জনপ্রিয় AI টুলস</h2>
   <div class="grid">
     {% for t in tools %}
     <div class="card">
@@ -27,7 +34,7 @@
   </div>
 </section>
 <section>
-  <h2>📝 সাম্প্রতিক ব্লগ</h2>
+  <h2 class="sec-title">📝 সাম্প্রতিক ব্লগ</h2>
   <div class="grid">
     {% for p in posts %}
     <div class="card">
@@ -39,7 +46,7 @@
   </div>
 </section>
 <section class="cats">
-  <h2>📂 ক্যাটাগরি অনুযায়ী দেখুন</h2>
+  <h2 class="sec-title">📂 ক্যাটাগরি অনুযায়ী দেখুন</h2>
   <div class="cat-list">
     <a href="{{ url_for('tools', category='AI Chat') }}">💬 AI Chat</a>
     <a href="{{ url_for('tools', category='AI Writing') }}">✍️ AI Writing</a>

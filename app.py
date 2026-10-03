@@ -6,7 +6,7 @@ import sqlite3
 from datetime import timedelta
 from functools import wraps
 from urllib.parse import urlparse
-from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -249,6 +249,26 @@ def contact():
             flash("আপনার মেসেজ পাঠানো হয়েছে। ধন্যবাদ!", "success")
             return redirect(url_for("contact"))
     return render_template("contact.html")
+
+# ---------- SEO: robots.txt & sitemap.xml ----------
+@app.route("/robots.txt")
+def robots():
+    lines = ["User-agent: *", "Allow: /", "Disallow: /admin", "Disallow: /login",
+             f"Sitemap: {request.host_url}sitemap.xml"]
+    return Response("\n".join(lines) + "\n", mimetype="text/plain")
+
+
+@app.route("/sitemap.xml")
+def sitemap():
+    db = get_db()
+    posts = db.execute("SELECT id FROM posts ORDER BY id DESC").fetchall()
+    urls = ["/", "/tools", "/tutorials", "/blog", "/about", "/contact"]
+    urls += [f"/blog/{p['id']}" for p in posts]
+    base = request.host_url.rstrip("/")
+    items = "".join(f"<url><loc>{base}{u}</loc></url>" for u in urls)
+    xml = f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}</urlset>'
+    return Response(xml, mimetype="application/xml")
+
 
 # ---------- auth / admin ----------
 @app.route("/login", methods=["GET", "POST"])
