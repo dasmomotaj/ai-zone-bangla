@@ -3,9 +3,11 @@
 {% block title %}হোম | AI Zone বাংলা{% endblock %}
 {% block content %}
 <section class="hero">
+  <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span>
   <span class="eyebrow">✨ বাংলায় AI শেখার সেরা ঠিকানা</span>
   <h1>বাংলায় <span class="grad">AI শিখুন</span> সহজে 🇧🇩</h1>
   <p class="lead">সেরা AI টুলস, টিউটোরিয়াল ও ব্লগ — সব এক জায়গায়।</p>
+  <p class="typing-line"><span id="typing" class="typing-line" data-phrases='["AI Chat দিয়ে লিখুন ✍️","AI দিয়ে ছবি বানান 🎨","AI দিয়ে ভিডিও তৈরি করুন 🎬","বাংলায় AI শিখুন 🇧🇩"]'></span></p>
   <form action="{{ url_for('tools') }}" method="get" class="search-bar">
     <input type="text" name="q" placeholder="টুল খুঁজুন... (যেমন: ছবি, ভিডিও)">
     <button type="submit">খুঁজুন</button>
@@ -15,16 +17,21 @@
     <a href="{{ url_for('tutorials') }}" class="btn outline">টিউটোরিয়াল</a>
   </div>
   <div class="hero-stats">
-    <span><b>12+</b>সেরা AI টুলস</span>
-    <span><b>৫টি</b>ক্যাটাগরি</span>
-    <span><b>১০০%</b>বাংলায়</span>
+    <span><b data-count="12" data-suffix="+">12+</b>সেরা AI টুলস</span>
+    <span><b data-count="5" data-suffix="টি">৫টি</b>ক্যাটাগরি</span>
+    <span><b data-count="100" data-suffix="%">১০০%</b>বাংলায়</span>
   </div>
 </section>
+<div class="marquee"><div class="marquee-track">
+  <span>💬 AI Chat</span><span>✍️ AI Writing</span><span>🎨 AI Image</span><span>🎬 AI Video</span><span>🖌️ AI Design</span><span>🤖 ChatGPT</span><span>✨ Gemini</span><span>🎨 Midjourney</span>
+  <span>💬 AI Chat</span><span>✍️ AI Writing</span><span>🎨 AI Image</span><span>🎬 AI Video</span><span>🖌️ AI Design</span><span>🤖 ChatGPT</span><span>✨ Gemini</span><span>🎨 Midjourney</span>
+</div></div>
 <section>
   <h2 class="sec-title">⭐ জনপ্রিয় AI টুলস</h2>
-  <div class="grid">
+  <div class="grid ranked">
     {% for t in tools %}
     <div class="card">
+      <span class="rank-no">{{ loop.index }}</span>
       <span class="badge">{{ t['category'] }}</span>
       <h3>{{ t['name'] }}</h3>
       <p>{{ t['description'] }}</p>

@@ -28,6 +28,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+<div id="scrollbar"></div>
 <header class="navbar" id="navbar">
   <div class="container nav-inner">
     <a href="{{ url_for('index') }}" class="logo"><span class="logo-dot">🤖</span><span>AI Zone <b>বাংলা</b></span></a>
@@ -62,11 +63,31 @@
   {% block content %}{% endblock %}
 </main>
 <footer>
-  <div class="container foot-inner">
-    <p>© 2026 AI Zone বাংলা — বাংলায় AI শেখার সেরা ঠিকানা।</p>
-    <p><a href="{{ url_for('about') }}">আমাদের সম্পর্কে</a> · <a href="{{ url_for('contact') }}">যোগাযোগ</a> · <a href="{{ url_for('login') }}">অ্যাডমিন</a></p>
+  <div class="container foot-grid">
+    <div>
+      <h4>🤖 AI Zone <span class="grad">বাংলা</span></h4>
+      <p class="muted">বাংলায় AI শেখার সেরা ঠিকানা — টুলস, টিউটোরিয়াল ও ব্লগ সব এক জায়গায়।</p>
+    </div>
+    <div>
+      <h4>দ্রুত লিংক</h4>
+      <ul>
+        <li><a href="{{ url_for('tools') }}">🛠️ সব AI টুলস</a></li>
+        <li><a href="{{ url_for('tutorials') }}">🎓 টিউটোরিয়াল</a></li>
+        <li><a href="{{ url_for('blog') }}">📝 ব্লগ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>আরও জানুন</h4>
+      <ul>
+        <li><a href="{{ url_for('about') }}">💡 আমাদের সম্পর্কে</a></li>
+        <li><a href="{{ url_for('contact') }}">📩 যোগাযোগ</a></li>
+        <li><a href="{{ url_for('login') }}">🔐 অ্যাডমিন</a></li>
+      </ul>
+    </div>
   </div>
+  <div class="foot-bottom">© 2026 AI Zone বাংলা — বাংলায় AI শেখার সেরা ঠিকানা।</div>
 </footer>
+<button id="toTop" onclick="scrollToTop()" aria-label="উপরে যান">↑</button>
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
