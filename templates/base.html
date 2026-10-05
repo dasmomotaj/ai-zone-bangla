@@ -26,6 +26,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ai-zone-premium.css') }}">
 </head>
 <body>
 <div id="scrollbar"></div>
@@ -34,7 +35,7 @@
     <a href="{{ url_for('index') }}" class="logo"><span class="logo-dot">🤖</span><span>AI Zone <b>বাংলা</b></span></a>
     <button class="nav-toggle" onclick="toggleNav()" aria-label="মেনু">☰</button>
     <nav id="navMenu" class="nav-links">
-    <a href="/quran">📖 কুরআন শিক্ষা</a>
+    <a href="/quran" aria-label="কুরআন শিক্ষা">📖 কুরআন শিক্ষা</a>
       <a class="nav-link" href="{{ url_for('index') }}" data-path="/">হোম</a>
       <a class="nav-link" href="{{ url_for('tools') }}" data-path="/tools">AI টুলস</a>
       <a class="nav-link" href="{{ url_for('tutorials') }}" data-path="/tutorials">টিউটোরিয়াল</a>
@@ -93,5 +94,6 @@
 </footer>
 <button id="toTop" onclick="scrollToTop()" aria-label="উপরে যান">↑</button>
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='ai-zone-premium.js') }}" defer></script>
 </body>
 </html>
