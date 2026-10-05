@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lesson 8 — হরফ জোড়া দিয়ে পড়া | AI Zone বাংলা</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .quran-lesson {
+            max-width: 760px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .intro,
+        .practice-box {
+            margin-top: 20px;
+            padding: 18px;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+        }
+
+        .connected-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .connected-card {
+            padding: 18px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+        }
+
+        .arabic-example {
+            font-size: 48px;
+            direction: rtl;
+            margin-bottom: 10px;
+        }
+
+        @media (min-width: 600px) {
+            .connected-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="quran-lesson">
+
+    <h1>📘 Lesson 8</h1>
+
+    <h2>হরফ জোড়া দিয়ে পড়া</h2>
+
+    <section class="intro">
+
+        <p>
+            আরবি হরফ একসাথে এলে অনেক সময় তারা
+            শব্দের মধ্যে সংযুক্ত হয়ে যায়।
+        </p>
+
+        <p>
+            আজ আমরা কয়েকটি সহজ উদাহরণ দেখে
+            একাধিক হরফ একসাথে পড়ার অনুশীলন করব।
+        </p>
+
+        <p>
+            এগুলো শেখার সময় প্রতিটি হরফের
+            সঠিক উচ্চারণ আলাদা করে চিনে নেওয়া জরুরি।
+        </p>
+
+    </section>
+
+    <div class="connected-grid">
+
+        {% for arabic, name in connected %}
+        <article class="connected-card">
+
+            <div class="arabic-example">
+                {{ arabic }}
+            </div>
+
+            <strong>{{ name }}</strong>
+
+        </article>
+        {% endfor %}
+
+    </div>
+
+    <section class="practice-box">
+
+        <h2>🎯 অনুশীলন</h2>
+
+        <ol>
+            <li>প্রথমে প্রতিটি হরফ আলাদা করে চিনুন।</li>
+            <li>তারপর হরফগুলো একসাথে দেখে পড়ুন।</li>
+            <li>ধীরে পড়ুন এবং প্রতিটি হরফের উচ্চারণ পরিষ্কার রাখুন।</li>
+            <li>ভুল হলে আবার আলাদা হরফ থেকে শুরু করুন।</li>
+        </ol>
+
+    </section>
+
+    <section class="practice-box">
+
+        <h2>📌 মনে রাখুন</h2>
+
+        <p>
+            আরবি হরফের সবগুলো একে অপরের সাথে
+            একইভাবে যুক্ত হয় না। কিছু হরফের
+            সংযোগের বিশেষ নিয়ম রয়েছে।
+        </p>
+
+        <p>
+            পরবর্তী lesson-এ আমরা শব্দের মধ্যে
+            হরফের অবস্থান ও সংযোগ আরও ভালোভাবে দেখব।
+        </p>
+
+    </section>
+
+    <p>
+        <a href="/quran">← কুরআন শিক্ষা</a>
+    </p>
+
+</main>
+
+
+<div id="quran-nav-8" style="display:flex;justify-content:space-between;gap:10px;margin:24px 0;padding:14px;border-radius:14px;background:#f3f4f6;">
+  <div><a href="/quran/lesson/7">⬅️ আগের পাঠ</a></div>
+  <div><a href="/quran">📚 সব পাঠ</a></div>
+  <div><a href="/quran/lesson/9">পরের পাঠ ➡️</a></div>
+</div>
+
+</body>
+</html>

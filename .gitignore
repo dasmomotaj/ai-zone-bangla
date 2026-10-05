@@ -7,3 +7,9 @@ instance/
 .env
 venv/
 .venv/
+
+# Local lesson backups and temporary route files
+*.backup
+*.before-*
+*_route.txt
+*.backup.html

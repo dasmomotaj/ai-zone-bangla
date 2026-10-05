@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lesson 2 — হরফের আকৃতি | AI Zone বাংলা</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .quran-lesson {
+            max-width: 760px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .letter-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .letter-card {
+            padding: 18px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+        }
+
+        .arabic-letter {
+            font-size: 52px;
+            direction: rtl;
+            margin-bottom: 8px;
+        }
+
+        .connection-box {
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 14px;
+            border: 1px solid #ddd;
+        }
+
+        .arabic-example {
+            font-size: 38px;
+            direction: rtl;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        @media (min-width: 600px) {
+            .letter-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="quran-lesson">
+
+    <h1>📘 Lesson 2</h1>
+
+    <h2>হরফের আকৃতি ও সংযোগ</h2>
+
+    <p>
+        আরবি হরফ শব্দের শুরু, মাঝখান ও শেষে অবস্থান করলে
+        অনেক সময় তাদের আকৃতি পরিবর্তিত হয়।
+    </p>
+
+    <div class="letter-grid">
+
+        {% for letter, name in examples %}
+        <article class="letter-card">
+            <div class="arabic-letter">{{ letter }}</div>
+            <strong>{{ name }}</strong>
+        </article>
+        {% endfor %}
+
+    </div>
+
+    <section class="connection-box">
+
+        <h2>🔗 সংযোগের ধারণা</h2>
+
+        <p>
+            কিছু আরবি হরফ পরের হরফের সঙ্গে যুক্ত হতে পারে।
+            তাই কুরআন পড়তে হলে হরফের আলাদা ও সংযুক্ত আকৃতি
+            ধীরে ধীরে চিনতে শেখা জরুরি।
+        </p>
+
+        <div class="arabic-example">
+            ب + ت
+        </div>
+
+        <p>
+            প্রথমে প্রতিটি হরফ আলাদা করে চিনুন।
+            এরপর হরফগুলো কীভাবে একসঙ্গে লেখা হয় তা অনুশীলন করুন।
+        </p>
+
+    </section>
+
+    <section class="connection-box">
+
+        <h2>🎯 আজকের অনুশীলন</h2>
+
+        <ol>
+            <li>ب، ت، ث، ن، ي হরফগুলো চিনুন।</li>
+            <li>প্রতিটি হরফের নাম মুখস্থ করার চেষ্টা করুন।</li>
+            <li>একই হরফ শব্দের বিভিন্ন অবস্থানে কীভাবে পরিবর্তিত হয় তা লক্ষ্য করুন।</li>
+        </ol>
+
+        <p>
+            <strong>পরবর্তী lesson:</strong>
+            যবর, যের ও পেশ (Harakat)।
+        </p>
+
+    </section>
+
+    <p>
+        <a href="/quran">← কুরআন শিক্ষা</a>
+    </p>
+
+</main>
+
+
+<div id="quran-nav-2" style="display:flex;justify-content:space-between;gap:10px;margin:24px 0;padding:14px;border-radius:14px;background:#f3f4f6;">
+  <div><a href="/quran/lesson/1">⬅️ আগের পাঠ</a></div>
+  <div><a href="/quran">📚 সব পাঠ</a></div>
+  <div><a href="/quran/lesson/3">পরের পাঠ ➡️</a></div>
+</div>
+
+</body>
+</html>
