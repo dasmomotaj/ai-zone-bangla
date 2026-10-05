@@ -2436,3 +2436,190 @@
 
 
 
+
+
+/* AI-ZONE-QURAN-NEXT-LESSON-INTELLIGENCE-CSS-START */
+.quran-next-lesson-intelligence {
+  margin: 24px 0;
+  padding: 22px;
+  border: 1px solid rgba(0, 220, 255, .22);
+  border-radius: 22px;
+  background:
+    linear-gradient(145deg, rgba(8, 20, 38, .96), rgba(7, 13, 25, .94));
+  box-shadow:
+    0 14px 45px rgba(0, 0, 0, .25),
+    0 0 30px rgba(0, 200, 255, .06);
+}
+
+.quran-next-lesson-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.quran-next-lesson-kicker {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  color: #67e8f9;
+  margin-bottom: 6px;
+}
+
+.quran-next-lesson-head h2 {
+  margin: 0;
+  font-size: clamp(20px, 4vw, 30px);
+}
+
+.quran-next-lesson-head p {
+  margin: 7px 0 0;
+  opacity: .72;
+  line-height: 1.6;
+}
+
+.quran-next-lesson-count {
+  min-width: 100px;
+  text-align: center;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(0, 200, 255, .08);
+  border: 1px solid rgba(0, 220, 255, .16);
+}
+
+.quran-next-lesson-count strong {
+  display: block;
+  font-size: 27px;
+  color: #67e8f9;
+}
+
+.quran-next-lesson-count span {
+  display: block;
+  font-size: 10px;
+  opacity: .65;
+}
+
+.quran-next-lesson-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.quran-next-lesson-number {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  border-radius: 18px;
+  background: rgba(0, 220, 255, .10);
+  border: 1px solid rgba(0, 220, 255, .20);
+}
+
+.quran-next-lesson-number span {
+  font-size: 9px;
+  opacity: .65;
+}
+
+.quran-next-lesson-number strong {
+  font-size: 24px;
+  color: #67e8f9;
+}
+
+.quran-next-lesson-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.quran-next-lesson-info strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 17px;
+}
+
+.quran-next-lesson-info span {
+  font-size: 12px;
+  opacity: .65;
+}
+
+.quran-next-lesson-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 13px;
+  text-decoration: none;
+  font-weight: 800;
+  color: inherit;
+  background: rgba(0, 220, 255, .13);
+  border: 1px solid rgba(0, 220, 255, .25);
+  transition: transform .18s ease, background .18s ease;
+}
+
+.quran-next-lesson-button:hover {
+  transform: translateY(-2px);
+  background: rgba(0, 220, 255, .20);
+}
+
+.quran-next-lesson-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 13px;
+}
+
+.quran-next-lesson-meta span {
+  padding: 7px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  opacity: .72;
+  background: rgba(255,255,255,.035);
+}
+
+.quran-next-lesson-intelligence.is-complete {
+  border-color: rgba(80, 220, 150, .30);
+}
+
+.quran-next-lesson-intelligence.is-revision {
+  border-color: rgba(255, 190, 80, .30);
+}
+
+@media (max-width: 620px) {
+  .quran-next-lesson-intelligence {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .quran-next-lesson-head {
+    align-items: flex-start;
+  }
+
+  .quran-next-lesson-count {
+    min-width: 76px;
+    padding: 9px;
+  }
+
+  .quran-next-lesson-count strong {
+    font-size: 22px;
+  }
+
+  .quran-next-lesson-card {
+    flex-wrap: wrap;
+  }
+
+  .quran-next-lesson-info {
+    min-width: calc(100% - 82px);
+  }
+
+  .quran-next-lesson-button {
+    width: 100%;
+  }
+}
+/* AI-ZONE-QURAN-NEXT-LESSON-INTELLIGENCE-CSS-END */

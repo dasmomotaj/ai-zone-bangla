@@ -4414,3 +4414,292 @@
 
 
 
+
+
+// AI-ZONE-QURAN-NEXT-LESSON-INTELLIGENCE-JS-START
+(function () {
+  "use strict";
+
+  const PROGRESS_KEY = "ai_zone_quran_progress_v1";
+  const QUIZ_KEY = "ai_zone_quran_quiz_v1";
+  const PASS_SCORE = 70;
+  const TOTAL_LESSONS = 20;
+
+  function readJSON(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return fallback;
+      return JSON.parse(raw);
+    } catch (error) {
+      return fallback;
+    }
+  }
+
+  function lessonIdOf(item) {
+    if (!item || typeof item !== "object") return null;
+
+    const value =
+      item.lessonId ??
+      item.lesson_id ??
+      item.lesson ??
+      item.id;
+
+    const n = Number(value);
+    return Number.isFinite(n) && n >= 1 && n <= TOTAL_LESSONS
+      ? n
+      : null;
+  }
+
+  function scoreOf(item) {
+    if (item == null) return null;
+
+    if (typeof item === "number") {
+      return Number.isFinite(item) ? item : null;
+    }
+
+    if (typeof item !== "object") return null;
+
+    const value =
+      item.score ??
+      item.quizScore ??
+      item.percentage ??
+      item.percent ??
+      item.result;
+
+    const n = Number(value);
+
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function isCompleted(progress, lessonId) {
+    if (!progress) return false;
+
+    if (Array.isArray(progress)) {
+      return progress.some(function (item) {
+        const id = lessonIdOf(item);
+        return id === lessonId ||
+          (typeof item === "number" && Number(item) === lessonId);
+      });
+    }
+
+    if (typeof progress === "object") {
+      const direct = progress[String(lessonId)];
+
+      if (direct === true) return true;
+
+      if (direct && typeof direct === "object") {
+        return direct.completed === true ||
+          direct.complete === true ||
+          direct.status === "completed";
+      }
+
+      if (Array.isArray(progress.completedLessons)) {
+        return progress.completedLessons.some(function (x) {
+          return Number(x) === lessonId;
+        });
+      }
+
+      if (Array.isArray(progress.completed)) {
+        return progress.completed.some(function (x) {
+          return Number(x) === lessonId;
+        });
+      }
+
+      if (Array.isArray(progress.lessons)) {
+        return progress.lessons.some(function (item) {
+          return lessonIdOf(item) === lessonId &&
+            (item.completed === true || item.status === "completed");
+        });
+      }
+    }
+
+    return false;
+  }
+
+  function getQuizScore(quiz, lessonId) {
+    if (!quiz) return null;
+
+    const sources = [];
+
+    if (Array.isArray(quiz)) sources.push(quiz);
+    if (Array.isArray(quiz.results)) sources.push(quiz.results);
+    if (Array.isArray(quiz.history)) sources.push(quiz.history);
+    if (Array.isArray(quiz.attempts)) sources.push(quiz.attempts);
+
+    if (quiz[String(lessonId)] != null) {
+      const value = quiz[String(lessonId)];
+      const score = scoreOf(value);
+      if (score !== null) return score;
+    }
+
+    let latest = null;
+    let latestTime = -1;
+
+    sources.forEach(function (list) {
+      list.forEach(function (item) {
+        if (!item || typeof item !== "object") return;
+
+        if (lessonIdOf(item) !== lessonId) return;
+
+        const score = scoreOf(item);
+        if (score === null) return;
+
+        const time = Number(
+          item.timestamp ??
+          item.time ??
+          item.createdAt ??
+          item.updatedAt ??
+          0
+        );
+
+        if (time >= latestTime) {
+          latestTime = time;
+          latest = score;
+        }
+      });
+    });
+
+    return latest;
+  }
+
+  function lessonURL(lessonId) {
+    if (lessonId === 1) {
+      return "/quran/lesson/1";
+    }
+
+    return "/quran/lesson/" + lessonId;
+  }
+
+  function refresh() {
+    const root = document.querySelector(
+      "[data-quran-next-lesson-intelligence]"
+    );
+
+    if (!root) return;
+
+    const progress = readJSON(PROGRESS_KEY, {});
+    const quiz = readJSON(QUIZ_KEY, {});
+
+    let completedCount = 0;
+
+    for (let i = 1; i <= TOTAL_LESSONS; i++) {
+      if (isCompleted(progress, i)) {
+        completedCount++;
+      }
+    }
+
+    const completedEl =
+      root.querySelector("[data-next-lesson-completed]");
+    const numberEl =
+      root.querySelector("[data-next-lesson-number]");
+    const nameEl =
+      root.querySelector("[data-next-lesson-name]");
+    const titleEl =
+      root.querySelector("[data-next-lesson-title]");
+    const messageEl =
+      root.querySelector("[data-next-lesson-message]");
+    const statusEl =
+      root.querySelector("[data-next-lesson-status]");
+    const scoreEl =
+      root.querySelector("[data-next-lesson-score]");
+    const priorityEl =
+      root.querySelector("[data-next-lesson-priority]");
+    const buttonEl =
+      root.querySelector("[data-next-lesson-button]");
+
+    if (completedEl) completedEl.textContent = completedCount;
+
+    if (completedCount >= TOTAL_LESSONS) {
+      root.classList.add("is-complete");
+
+      if (titleEl) titleEl.textContent = "মাশাআল্লাহ! Academy Complete";
+      if (messageEl) {
+        messageEl.textContent =
+          "সব ২০টি Lesson সম্পন্ন হয়েছে। এখন Revision ও নিয়মিত অনুশীলন চালিয়ে যান।";
+      }
+      if (numberEl) numberEl.textContent = "✓";
+      if (nameEl) nameEl.textContent = "Quran Academy সম্পন্ন";
+      if (statusEl) statusEl.textContent = "Completed";
+      if (scoreEl) scoreEl.textContent = "Lessons: 20 / 20";
+      if (priorityEl) priorityEl.textContent = "Learning Status: Complete";
+
+      if (buttonEl) {
+        buttonEl.href = "/quran";
+        buttonEl.textContent = "Academy Dashboard →";
+      }
+
+      return;
+    }
+
+    root.classList.remove("is-complete");
+
+    let nextLesson = null;
+
+    for (let i = 1; i <= TOTAL_LESSONS; i++) {
+      if (!isCompleted(progress, i)) {
+        nextLesson = i;
+        break;
+      }
+    }
+
+    if (!nextLesson) return;
+
+    const score = getQuizScore(quiz, nextLesson);
+    const passed = score !== null && score >= PASS_SCORE;
+
+    if (numberEl) numberEl.textContent = nextLesson;
+    if (nameEl) nameEl.textContent = "Quran Lesson " + nextLesson;
+    if (scoreEl) {
+      scoreEl.textContent =
+        score === null
+          ? "Quiz Score: —"
+          : "Quiz Score: " + Math.round(score) + "%";
+    }
+
+    if (passed) {
+      root.classList.remove("is-revision");
+      if (titleEl) titleEl.textContent = "পরবর্তী Lesson প্রস্তুত";
+      if (messageEl) {
+        messageEl.textContent =
+          "আগের পাঠের Quiz ভালো হয়েছে। এবার পরবর্তী Lesson শুরু করুন।";
+      }
+      if (statusEl) statusEl.textContent = "Ready";
+      if (priorityEl) priorityEl.textContent = "Learning Status: Ready";
+    } else if (score !== null && score < PASS_SCORE) {
+      root.classList.add("is-revision");
+      if (titleEl) titleEl.textContent = "Revision আগে করুন";
+      if (messageEl) {
+        messageEl.textContent =
+          "পরবর্তী Lesson-এ যাওয়ার আগে আগের শেখা বিষয়টি আবার অনুশীলন করুন।";
+      }
+      if (statusEl) statusEl.textContent = "Revision Recommended";
+      if (priorityEl) {
+        priorityEl.textContent =
+          "Learning Status: Revision Recommended";
+      }
+    } else {
+      root.classList.remove("is-revision");
+      if (titleEl) titleEl.textContent = "আপনার পরবর্তী Lesson";
+      if (messageEl) {
+        messageEl.textContent =
+          "আপনার অগ্রগতির ভিত্তিতে এই Lesson-টি এখন শেখার জন্য প্রস্তুত।";
+      }
+      if (statusEl) statusEl.textContent = "Next";
+      if (priorityEl) priorityEl.textContent = "Learning Status: Next";
+    }
+
+    if (buttonEl) {
+      buttonEl.href = lessonURL(nextLesson);
+      buttonEl.textContent = "Lesson " + nextLesson + " শুরু করুন →";
+    }
+  }
+
+  window.AIZoneRefreshQuranNextLessonIntelligence = refresh;
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", refresh);
+  } else {
+    refresh();
+  }
+})();
+// AI-ZONE-QURAN-NEXT-LESSON-INTELLIGENCE-JS-END
