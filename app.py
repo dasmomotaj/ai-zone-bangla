@@ -11,6 +11,8 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.middleware.proxy_fix import ProxyFix
 
+from quran_quiz_bank import get_quiz
+from quran_audio_sources import get_audio_source
 app = Flask(__name__)
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
@@ -858,6 +860,13 @@ def quran_lesson_20():
         ("إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ", "পূর্বের বিষয়গুলোর সমন্বিত অনুশীলন"),
     ]
     return render_template("quran_lesson_20.html", examples=examples)
+
+
+# AI-ZONE-QUIZ-BANK-CONTEXT-START
+@app.context_processor
+def quran_quiz_context():
+    return {"get_quiz": get_quiz}
+# AI-ZONE-QUIZ-BANK-CONTEXT-END
 
 if __name__ == "__main__":
     init_db()

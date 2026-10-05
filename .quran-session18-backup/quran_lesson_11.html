@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কুরআন শিক্ষা — পাঠ ১১</title>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            color: #222;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .intro {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .arabic {
+            font-size: 40px;
+            direction: rtl;
+            margin-bottom: 12px;
+        }
+
+        .reading {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .note {
+            background: #fff8df;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 20px;
+            line-height: 1.7;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>📖 কুরআন শিক্ষা — পাঠ ১১</h1>
+
+    <div class="intro">
+        <p><strong>বিষয়:</strong> শব্দ পড়ার অনুশীলন</p>
+        <p>আগের পাঠের হরফ ও হরকত ব্যবহার করে সহজ শব্দ পড়ার চেষ্টা করুন।</p>
+    </div>
+
+    {% for arabic, reading in practice %}
+    <div class="card">
+        <div class="arabic">{{ arabic }}</div>
+        <div class="reading">{{ reading }}</div>
+    </div>
+    {% endfor %}
+
+    <div class="note">
+        💡 <strong>অনুশীলন:</strong>
+        প্রথমে আরবি শব্দটি দেখে নিজে পড়ার চেষ্টা করুন।
+        তারপর নিচের বাংলা সহায়ক পাঠের সঙ্গে মিলিয়ে নিন।
+        সঠিক তাজবিদ ও উচ্চারণের জন্য যোগ্য শিক্ষক বা কারির নির্দেশনা নেওয়া উত্তম।
+    </div>
+
+    <div style="text-align:center;">
+        <a href="/quran">⬅️ কুরআন শিক্ষা তালিকায় ফিরে যান</a>
+    </div>
+
+</div>
+
+<div id="quran-nav-11" style="display:flex;justify-content:space-between;gap:10px;margin:24px 0;padding:14px;border-radius:14px;background:#f3f4f6;">
+  <div><a href="/quran/lesson/10">⬅️ আগের পাঠ</a></div>
+  <div><a href="/quran">📚 সব পাঠ</a></div>
+  <div><a href="/quran/lesson/12">পরের পাঠ ➡️</a></div>
+</div>
+
+</body>
+</html>

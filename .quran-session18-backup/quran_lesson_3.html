@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 3 — হরকত | AI Zone বাংলা</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .quran-lesson {
+            max-width: 760px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .intro,
+        .practice-box {
+            margin-top: 20px;
+            padding: 18px;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+        }
+
+        .harakat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .harakat-card {
+            padding: 18px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+        }
+
+        .arabic-example {
+            font-size: 58px;
+            direction: rtl;
+            margin-bottom: 10px;
+        }
+
+        .meaning {
+            margin-top: 6px;
+            font-size: 15px;
+        }
+
+        @media (min-width: 600px) {
+            .harakat-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="quran-lesson">
+
+    <h1>📘 Lesson 3</h1>
+
+    <h2>হরকত: যবর, যের ও পেশ</h2>
+
+    <section class="intro">
+        <p>
+            আরবি হরফের সঙ্গে ছোট কিছু চিহ্ন ব্যবহার করে
+            তার স্বরধ্বনি বোঝানো হয়। এগুলোকে হরকত বলা হয়।
+        </p>
+
+        <p>
+            আজ আমরা তিনটি মৌলিক হরকত শিখব:
+            <strong>যবর (َ), যের (ِ), পেশ (ُ)</strong>।
+        </p>
+    </section>
+
+    <div class="harakat-grid">
+
+        {% for arabic, name, sound in harakat %}
+        <article class="harakat-card">
+
+            <div class="arabic-example">
+                {{ arabic }}
+            </div>
+
+            <strong>{{ name }}</strong>
+
+            <div class="meaning">
+                উদাহরণ: {{ sound }}
+            </div>
+
+        </article>
+        {% endfor %}
+
+    </div>
+
+    <section class="practice-box">
+
+        <h2>📚 সহজভাবে মনে রাখুন</h2>
+
+        <ul>
+            <li><strong>যবর (َ)</strong> — হরফের ওপর থাকে।</li>
+            <li><strong>যের (ِ)</strong> — হরফের নিচে থাকে।</li>
+            <li><strong>পেশ (ُ)</strong> — হরফের ওপর থাকে এবং ছোট “উ” ধ্বনি দেয়।</li>
+        </ul>
+
+    </section>
+
+    <section class="practice-box">
+
+        <h2>🎯 আজকের অনুশীলন</h2>
+
+        <ol>
+            <li>بَ দেখে অনুশীলন করুন।</li>
+            <li>بِ দেখে অনুশীলন করুন।</li>
+            <li>بُ দেখে অনুশীলন করুন।</li>
+            <li>তিনটি চিহ্ন আলাদা করে চিনতে চেষ্টা করুন।</li>
+        </ol>
+
+        <p>
+            <strong>নোট:</strong>
+            বাংলা উচ্চারণ এখানে শুধু প্রাথমিক শেখার সহায়তা।
+            সঠিক আরবি উচ্চারণ ও মাখরাজ শেখার জন্য
+            যোগ্য শিক্ষক বা কারির কাছ থেকে শুনে অনুশীলন করা উত্তম।
+        </p>
+
+        <p>
+            <strong>পরবর্তী lesson:</strong>
+            তানভীন — দুই যবর, দুই যের ও দুই পেশ।
+        </p>
+
+    </section>
+
+    <p>
+        <a href="/quran">← কুরআন শিক্ষা</a>
+    </p>
+
+</main>
+
+
+<div id="quran-nav-3" style="display:flex;justify-content:space-between;gap:10px;margin:24px 0;padding:14px;border-radius:14px;background:#f3f4f6;">
+  <div><a href="/quran/lesson/2">⬅️ আগের পাঠ</a></div>
+  <div><a href="/quran">📚 সব পাঠ</a></div>
+  <div><a href="/quran/lesson/4">পরের পাঠ ➡️</a></div>
+</div>
+
+</body>
+</html>

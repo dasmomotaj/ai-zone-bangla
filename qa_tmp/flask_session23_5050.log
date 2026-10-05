@@ -1,0 +1,115 @@
+nohup: ignoring input
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5050
+ * Running on http://192.168.3.112:5050
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [05/Oct/2026 13:47:33] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:47:33] "GET /quran HTTP/1.1" 200 -
+[2026-10-05 13:47:33,544] ERROR in app: Exception on /quran/lesson/2 [GET]
+Traceback (most recent call last):
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/home/ai-zone-bangla/app.py", line 591, in quran_lesson_2
+    return render_template(
+        "quran_lesson_2.html",
+        examples=examples
+    )
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/data/data/com.termux/files/home/ai-zone-bangla/templates/quran_lesson_2.html", line 1300, in top-level template code
+    <a class="quran-lesson-nav-btn secondary" href="{{ url_for("quran_lesson") }}">← আগের পাঠ</a>
+    ^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/werkzeug/routing/map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'quran_lesson'. Did you forget to specify values ['lesson_id']?
+127.0.0.1 - - [05/Oct/2026 13:47:33] "[35m[1mGET /quran/lesson/2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [05/Oct/2026 13:47:33] "GET /quran/lesson/1 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:47:33] "GET /quran/lesson/10 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:47:33] "GET /quran/lesson/20 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:11] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:12] "GET /quran/lesson/1 HTTP/1.1" 200 -
+[2026-10-05 13:49:12,186] ERROR in app: Exception on /quran/lesson/2 [GET]
+Traceback (most recent call last):
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/home/ai-zone-bangla/app.py", line 591, in quran_lesson_2
+    return render_template(
+        "quran_lesson_2.html",
+        examples=examples
+    )
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/data/data/com.termux/files/home/ai-zone-bangla/templates/quran_lesson_2.html", line 1300, in top-level template code
+    <a class="quran-lesson-nav-btn secondary" href="{{ url_for("quran_lesson", lesson_id=1) }}">← আগের পাঠ</a>
+    ^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/flask/app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "/data/data/com.termux/files/usr/lib/python3.14/site-packages/werkzeug/routing/map.py", line 901, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'quran_lesson'. Did you forget to specify values ['lesson_id']?
+127.0.0.1 - - [05/Oct/2026 13:49:12] "[35m[1mGET /quran/lesson/2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [05/Oct/2026 13:49:12] "GET /quran/lesson/3 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:12] "GET /quran/lesson/4 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:12] "GET /quran/lesson/5 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:12] "GET /quran/lesson/6 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:12] "GET /quran/lesson/7 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:13] "GET /quran/lesson/8 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:13] "GET /quran/lesson/9 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:13] "GET /quran/lesson/10 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:13] "GET /quran/lesson/11 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:13] "GET /quran/lesson/12 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:13] "GET /quran/lesson/13 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:13] "GET /quran/lesson/14 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:14] "GET /quran/lesson/15 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:14] "GET /quran/lesson/16 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:14] "GET /quran/lesson/17 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:14] "GET /quran/lesson/18 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:14] "GET /quran/lesson/19 HTTP/1.1" 200 -
+127.0.0.1 - - [05/Oct/2026 13:49:14] "GET /quran/lesson/20 HTTP/1.1" 200 -

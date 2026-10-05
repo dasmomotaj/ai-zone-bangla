@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কুরআন শিক্ষা — পাঠ ১৪</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            color: #222;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .intro {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .arabic {
+            font-size: 40px;
+            direction: rtl;
+            margin-bottom: 12px;
+        }
+        .meaning {
+            font-size: 18px;
+            color: #555;
+        }
+        .note {
+            background: #fff8df;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 20px;
+            line-height: 1.7;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>📖 কুরআন শিক্ষা — পাঠ ১৪</h1>
+
+    <div class="intro">
+        <p><strong>বিষয়:</strong> মাদ্দ — দীর্ঘ স্বরের অনুশীলন</p>
+        <p>আলিফ, ওয়াও ও ইয়া-এর মাধ্যমে দীর্ঘ স্বরের কিছু উদাহরণ অনুশীলন করুন।</p>
+    </div>
+
+    {% for arabic, meaning in examples %}
+    <div class="card">
+        <div class="arabic">{{ arabic }}</div>
+        <div class="meaning">{{ meaning }}</div>
+    </div>
+    {% endfor %}
+
+    <div class="note">
+        💡 <strong>মনে রাখুন:</strong>
+        মাদ্দের সঠিক দৈর্ঘ্য ও তাজবিদের নিয়ম একজন যোগ্য শিক্ষক বা কারির কাছ থেকে শেখা উত্তম।
+    </div>
+
+    <div style="text-align:center;">
+        <a href="/quran">⬅️ কুরআন শিক্ষা তালিকায় ফিরে যান</a>
+    </div>
+
+</div>
+
+
+<div id="quran-nav-14" style="display:flex;justify-content:space-between;gap:10px;margin:24px 0;padding:14px;border-radius:14px;background:#f3f4f6;">
+  <div><a href="/quran/lesson/13">⬅️ আগের পাঠ</a></div>
+  <div><a href="/quran">📚 সব পাঠ</a></div>
+  <div><a href="/quran/lesson/15">পরের পাঠ ➡️</a></div>
+</div>
+
+</body>
+</html>

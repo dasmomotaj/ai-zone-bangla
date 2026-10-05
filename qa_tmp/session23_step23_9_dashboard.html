@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>কুরআন শিক্ষা একাডেমি — AI Zone বাংলা</title>
+
+    <link rel="stylesheet"
+          href="/static/style.css">
+
+    <style>
+        :root {
+            --qa-bg: #07111f;
+            --qa-card: rgba(15, 27, 45, .78);
+            --qa-card-2: rgba(20, 36, 58, .72);
+            --qa-border: rgba(125, 211, 252, .16);
+            --qa-text: #f8fafc;
+            --qa-muted: #a9b8ca;
+            --qa-cyan: #67e8f9;
+            --qa-blue: #60a5fa;
+            --qa-green: #34d399;
+            --qa-gold: #fbbf24;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 10% 0%, rgba(34,211,238,.10), transparent 28%),
+                radial-gradient(circle at 90% 10%, rgba(96,165,250,.10), transparent 30%),
+                var(--qa-bg);
+        }
+
+        .academy-page {
+            width: min(1180px, 94%);
+            margin: 0 auto;
+            padding: 28px 0 60px;
+            color: var(--qa-text);
+        }
+
+        /* HERO */
+        .academy-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 34px 24px;
+            border: 1px solid var(--qa-border);
+            border-radius: 28px;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(14, 116, 144, .18),
+                    rgba(30, 64, 175, .14)
+                ),
+                rgba(8, 20, 35, .86);
+            box-shadow:
+                0 20px 70px rgba(0,0,0,.28),
+                inset 0 1px 0 rgba(255,255,255,.04);
+            text-align: center;
+        }
+
+        .academy-hero::before {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            right: -90px;
+            top: -100px;
+            border-radius: 50%;
+            background: rgba(103,232,249,.12);
+            filter: blur(10px);
+        }
+
+        .academy-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 13px;
+            border-radius: 999px;
+            background: rgba(103,232,249,.09);
+            border: 1px solid rgba(103,232,249,.18);
+            color: var(--qa-cyan);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .academy-hero h1 {
+            margin: 16px 0 10px;
+            font-size: clamp(30px, 6vw, 52px);
+            line-height: 1.1;
+            letter-spacing: -1px;
+        }
+
+        .academy-hero h1 span {
+            color: var(--qa-cyan);
+        }
+
+        .academy-hero p {
+            max-width: 720px;
+            margin: 0 auto;
+            color: var(--qa-muted);
+            line-height: 1.85;
+            font-size: 16px;
+        }
+
+        /* STATS */
+        .academy-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 18px 0 26px;
+        }
+
+        .stat-card {
+            padding: 18px;
+            border-radius: 20px;
+            background: var(--qa-card);
+            border: 1px solid var(--qa-border);
+            text-align: center;
+            backdrop-filter: blur(12px);
+        }
+
+        .stat-icon {
+            font-size: 24px;
+        }
+
+        .stat-number {
+            display: block;
+            margin-top: 5px;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .stat-label {
+            display: block;
+            margin-top: 3px;
+            color: var(--qa-muted);
+            font-size: 12px;
+        }
+
+        /* PROGRESS */
+        .progress-panel {
+            padding: 22px;
+            margin-bottom: 28px;
+            border-radius: 22px;
+            background: linear-gradient(
+                135deg,
+                rgba(52,211,153,.08),
+                rgba(96,165,250,.08)
+            );
+            border: 1px solid var(--qa-border);
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-title {
+            font-weight: 800;
+        }
+
+        .progress-percent {
+            color: var(--qa-green);
+            font-weight: 800;
+        }
+
+        .progress-track {
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(
+                90deg,
+                var(--qa-green),
+                var(--qa-cyan)
+            );
+            transition: width .4s ease;
+        }
+
+        .progress-note {
+            margin: 10px 0 0;
+            color: var(--qa-muted);
+            font-size: 13px;
+        }
+
+        /* SECTION */
+        .academy-section {
+            margin-top: 30px;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .section-heading p {
+            margin: 4px 0 0;
+            color: var(--qa-muted);
+            font-size: 13px;
+        }
+
+        /* LESSON GRID */
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .lesson-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 205px;
+            padding: 20px;
+            border-radius: 22px;
+            border: 1px solid var(--qa-border);
+            background: var(--qa-card);
+            text-decoration: none;
+            color: var(--qa-text);
+            overflow: hidden;
+            transition:
+                transform .2s ease,
+                border-color .2s ease,
+                box-shadow .2s ease;
+        }
+
+        .lesson-card::after {
+            content: "";
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            right: -55px;
+            bottom: -55px;
+            border-radius: 50%;
+            background: rgba(103,232,249,.06);
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(103,232,249,.38);
+            box-shadow: 0 15px 45px rgba(0,0,0,.22);
+        }
+
+        .lesson-card.completed {
+            border-color: rgba(52,211,153,.35);
+        }
+
+        .lesson-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .lesson-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: rgba(103,232,249,.08);
+            border: 1px solid rgba(103,232,249,.16);
+            color: var(--qa-cyan);
+            font-weight: 900;
+        }
+
+        .lesson-status {
+            color: var(--qa-muted);
+            font-size: 12px;
+        }
+
+        .lesson-card.completed .lesson-status {
+            color: var(--qa-green);
+        }
+
+        .lesson-title {
+            margin: 18px 0 8px;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .lesson-description {
+            margin: 0;
+            color: var(--qa-muted);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .lesson-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: auto;
+            padding: 11px 14px;
+            border-radius: 13px;
+            background: rgba(96,165,250,.10);
+            border: 1px solid rgba(96,165,250,.18);
+            color: #dbeafe;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .lesson-card.completed .lesson-button {
+            background: rgba(52,211,153,.10);
+            border-color: rgba(52,211,153,.18);
+            color: #a7f3d0;
+        }
+
+        /* METHOD */
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .method-card {
+            padding: 16px 10px;
+            border-radius: 17px;
+            text-align: center;
+            background: var(--qa-card-2);
+            border: 1px solid var(--qa-border);
+        }
+
+        .method-card strong {
+            display: block;
+            margin-top: 7px;
+            font-size: 13px;
+        }
+
+        .method-card span {
+            font-size: 25px;
+        }
+
+        /* NOTE */
+        .academy-note {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 20px;
+            background: rgba(251,191,36,.06);
+            border: 1px solid rgba(251,191,36,.15);
+            color: #fef3c7;
+            line-height: 1.8;
+            font-size: 13px;
+        }
+
+        .academy-note strong {
+            color: var(--qa-gold);
+        }
+
+        /* MOBILE */
+        @media (max-width: 850px) {
+            .academy-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .method-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 620px) {
+            .academy-page {
+                width: 92%;
+                padding-top: 16px;
+            }
+
+            .academy-hero {
+                padding: 28px 17px;
+                border-radius: 23px;
+            }
+
+            .lesson-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .method-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-heading {
+                align-items: start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+<!-- AI-ZONE-QURAN-PROGRESS-SUMMARY-START -->
+<section class="academy-progress-summary" id="academyProgressSummary">
+  <div class="progress-summary-head">
+    <div>
+      <span class="progress-summary-kicker">YOUR LEARNING JOURNEY</span>
+      <h2>📊 আপনার Quran Learning Progress</h2>
+      <p>প্রতিদিন অল্প অল্প করে এগিয়ে যান। নিয়মিত অনুশীলনই সবচেয়ে গুরুত্বপূর্ণ।</p>
+    </div>
+  </div>
+
+  <div class="progress-summary-grid">
+    <div class="progress-summary-card">
+      <span class="progress-summary-icon">✅</span>
+      <strong id="quranCompletedCount">0</strong>
+      <span>সম্পন্ন পাঠ</span>
+    </div>
+
+    <div class="progress-summary-card">
+      <span class="progress-summary-icon">📖</span>
+      <strong id="quranRemainingCount">20</strong>
+      <span>বাকি পাঠ</span>
+    </div>
+
+    <div class="progress-summary-card">
+      <span class="progress-summary-icon">🎯</span>
+      <strong id="quranProgressPercent">0%</strong>
+      <span>মোট অগ্রগতি</span>
+    </div>
+
+    <div class="progress-summary-card">
+      <span class="progress-summary-icon">🚀</span>
+      <strong id="quranNextLesson">1</strong>
+      <span>পরবর্তী পাঠ</span>
+    </div>
+  </div>
+
+  <div class="academy-progress-track">
+    <div
+      class="academy-progress-fill"
+      id="quranAcademyProgressFill"
+      style="width:0%">
+    </div>
+  </div>
+
+  <div class="academy-progress-footer">
+    <span id="quranProgressText">0 / 20টি পাঠ সম্পন্ন</span>
+    <a href="/quran/lesson/1" id="quranContinueButton">
+      ▶ শেখা শুরু করুন
+    </a>
+  </div>
+</section>
+<!-- AI-ZONE-QURAN-PROGRESS-SUMMARY-END -->
+
+<!-- AI-ZONE-QURAN-DASHBOARD-FOCUS-START -->
+<section
+  class="quran-dashboard-focus"
+  data-quran-dashboard-focus
+  aria-label="Current Learning Focus">
+
+  <div class="quran-focus-glow"></div>
+
+  <div class="quran-focus-header">
+    <div>
+      <span class="quran-focus-kicker">SMART LEARNING FOCUS</span>
+      <h2>🎯 এখন কী করবেন?</h2>
+      <p>আপনার বর্তমান শেখার অবস্থার ভিত্তিতে পরবর্তী কাজটি এখানে দেখানো হবে।</p>
+    </div>
+    <div class="quran-focus-lesson" data-focus-lesson>
+      Lesson 1
+    </div>
+  </div>
+
+  <div class="quran-focus-body">
+
+    <div class="quran-focus-icon" data-focus-icon>📖</div>
+
+    <div class="quran-focus-content">
+      <span class="quran-focus-label">YOUR NEXT ACTION</span>
+
+      <h3 data-focus-title>শেখা শুরু করুন</h3>
+
+      <p data-focus-message>
+        আপনার Quran Academy journey শুরু করার জন্য প্রথম Lesson প্রস্তুত।
+      </p>
+
+      <div class="quran-focus-meta">
+        <span data-focus-status>Not Started</span>
+        <span data-focus-progress>0 / 20 Lessons</span>
+      </div>
+
+      <a
+        class="quran-focus-button"
+        data-focus-button
+        href="/quran/lesson/1">
+        Lesson 1 শুরু করুন →
+      </a>
+    </div>
+
+  </div>
+</section>
+<!-- AI-ZONE-QURAN-PRIORITY-SYNC-START -->
+<div
+  class="quran-focus-priority"
+  data-quran-focus-priority>
+
+  <div class="quran-focus-priority-icon" data-priority-icon>✓</div>
+
+  <div class="quran-focus-priority-content">
+    <span class="quran-focus-priority-label">WHY THIS ACTION?</span>
+
+    <strong data-priority-title>আপনার শেখার অগ্রগতি ভালোভাবে চালিয়ে যান</strong>
+
+    <p data-priority-message>
+      আপনার বর্তমান learning status অনুযায়ী পরবর্তী কাজ নির্বাচন করা হয়েছে।
+    </p>
+
+    <div class="quran-focus-priority-meta">
+      <span data-priority-badge>Normal</span>
+      <span data-priority-score>Score: —</span>
+    </div>
+  </div>
+
+</div>
+<!-- AI-ZONE-QURAN-PRIORITY-SYNC-END -->
+<!-- AI-ZONE-QURAN-DASHBOARD-FOCUS-END -->
+
+<main class="academy-page">
+
+    <!-- HERO -->
+    <section class="academy-hero">
+
+        <div class="academy-badge">
+            📖 AI Zone বাংলা • Quran Academy
+        </div>
+
+        <h1>
+            কুরআন শিক্ষা <span>একাডেমি</span>
+        </h1>
+
+        <p>
+            একদম শুরু থেকে ধাপে ধাপে কুরআন পড়ার অনুশীলন।
+            দেখুন → বুঝুন → পড়ুন → অনুশীলন করুন → আবার Revision করুন।
+        </p>
+
+    </section>
+
+
+    <!-- STATS -->
+    <section class="academy-stats">
+
+        <div class="stat-card">
+            <span class="stat-icon">📚</span>
+            <span class="stat-number">20</span>
+            <span class="stat-label">মোট পাঠ</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-icon">🎯</span>
+            <span class="stat-number" id="completedCount">0</span>
+            <span class="stat-label">সম্পন্ন পাঠ</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-icon">📈</span>
+            <span class="stat-number" id="progressNumber">0%</span>
+            <span class="stat-label">অগ্রগতি</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-icon">🧭</span>
+            <span class="stat-number" id="nextLessonNumber">1</span>
+            <span class="stat-label">পরবর্তী পাঠ</span>
+        </div>
+
+    </section>
+
+
+    <!-- PROGRESS -->
+    <section class="progress-panel">
+
+        <div class="progress-top">
+            <span class="progress-title">
+                🌱 আপনার Learning Progress
+            </span>
+
+            <span class="progress-percent" id="progressPercent">
+                0%
+            </span>
+        </div>
+
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <p class="progress-note">
+            প্রতিদিন অল্প অল্প করে শেখুন। ধারাবাহিকতা সবচেয়ে গুরুত্বপূর্ণ।
+        </p>
+
+    </section>
+
+
+    <!-- LESSONS -->
+    <section class="academy-section">
+
+        <div class="section-heading">
+            <div>
+                <h2>🗂️ শেখার পথ</h2>
+                <p>Lesson 1 থেকে Lesson 20 পর্যন্ত ধাপে ধাপে এগিয়ে যান।</p>
+            </div>
+        </div>
+
+        <div class="lesson-grid">
+
+            
+
+            
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="1"
+                href="/quran/lesson/1"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        01
+                    </span>
+
+                    <span class="lesson-status" id="status-1">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    আরবি হরফের পরিচয়
+                </div>
+
+                <p class="lesson-description">
+                    কুরআন পড়ার যাত্রার প্রথম ধাপ। আরবি হরফ চিনে নিন।
+                </p>
+
+                <span class="lesson-button" id="button-1">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="2"
+                href="/quran/lesson/2"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        02
+                    </span>
+
+                    <span class="lesson-status" id="status-2">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    হরফের সঠিক উচ্চারণ
+                </div>
+
+                <p class="lesson-description">
+                    হরফগুলো কীভাবে সঠিকভাবে উচ্চারণ করতে হয় তা অনুশীলন করুন।
+                </p>
+
+                <span class="lesson-button" id="button-2">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="3"
+                href="/quran/lesson/3"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        03
+                    </span>
+
+                    <span class="lesson-status" id="status-3">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    হরফের আকৃতি ও অবস্থান
+                </div>
+
+                <p class="lesson-description">
+                    একটি হরফের বিভিন্ন অবস্থান ও আকৃতি চিনুন।
+                </p>
+
+                <span class="lesson-button" id="button-3">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="4"
+                href="/quran/lesson/4"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        04
+                    </span>
+
+                    <span class="lesson-status" id="status-4">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    হরফ জোড়া লাগানো
+                </div>
+
+                <p class="lesson-description">
+                    আলাদা হরফ কীভাবে যুক্ত হয়ে শব্দ তৈরি করে তা শিখুন।
+                </p>
+
+                <span class="lesson-button" id="button-4">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="5"
+                href="/quran/lesson/5"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        05
+                    </span>
+
+                    <span class="lesson-status" id="status-5">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    ফাতহা, কাসরা ও দাম্মাহ
+                </div>
+
+                <p class="lesson-description">
+                    তিনটি মৌলিক হরকত দিয়ে পড়ার ভিত্তি তৈরি করুন।
+                </p>
+
+                <span class="lesson-button" id="button-5">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="6"
+                href="/quran/lesson/6"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        06
+                    </span>
+
+                    <span class="lesson-status" id="status-6">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    তানভীন
+                </div>
+
+                <p class="lesson-description">
+                    দুই যবর, দুই যের ও দুই পেশের ব্যবহার বুঝুন।
+                </p>
+
+                <span class="lesson-button" id="button-6">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="7"
+                href="/quran/lesson/7"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        07
+                    </span>
+
+                    <span class="lesson-status" id="status-7">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    সুকুন
+                </div>
+
+                <p class="lesson-description">
+                    সুকুনযুক্ত হরফ সঠিকভাবে পড়ার অনুশীলন করুন।
+                </p>
+
+                <span class="lesson-button" id="button-7">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="8"
+                href="/quran/lesson/8"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        08
+                    </span>
+
+                    <span class="lesson-status" id="status-8">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    শাদ্দাহ
+                </div>
+
+                <p class="lesson-description">
+                    শাদ্দাহ এবং জোর দিয়ে উচ্চারণের নিয়ম বুঝুন।
+                </p>
+
+                <span class="lesson-button" id="button-8">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="9"
+                href="/quran/lesson/9"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        09
+                    </span>
+
+                    <span class="lesson-status" id="status-9">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    মাদ্দের পরিচয়
+                </div>
+
+                <p class="lesson-description">
+                    মাদ্দ ও দীর্ঘ স্বরের প্রাথমিক ধারণা নিন।
+                </p>
+
+                <span class="lesson-button" id="button-9">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="10"
+                href="/quran/lesson/10"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        10
+                    </span>
+
+                    <span class="lesson-status" id="status-10">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    মাখরাজের ভিত্তি
+                </div>
+
+                <p class="lesson-description">
+                    হরফের মাখরাজ সম্পর্কে মৌলিক ধারণা তৈরি করুন।
+                </p>
+
+                <span class="lesson-button" id="button-10">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="11"
+                href="/quran/lesson/11"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        11
+                    </span>
+
+                    <span class="lesson-status" id="status-11">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    নূন সাকিন ও তানভীন
+                </div>
+
+                <p class="lesson-description">
+                    নূন সাকিন ও তানভীনের গুরুত্বপূর্ণ নিয়মগুলো জানুন।
+                </p>
+
+                <span class="lesson-button" id="button-11">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="12"
+                href="/quran/lesson/12"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        12
+                    </span>
+
+                    <span class="lesson-status" id="status-12">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    ইযহার
+                </div>
+
+                <p class="lesson-description">
+                    ইযহারের মাধ্যমে পরিষ্কার উচ্চারণ অনুশীলন করুন।
+                </p>
+
+                <span class="lesson-button" id="button-12">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="13"
+                href="/quran/lesson/13"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        13
+                    </span>
+
+                    <span class="lesson-status" id="status-13">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    ইদগাম
+                </div>
+
+                <p class="lesson-description">
+                    ইদগামের বিভিন্ন প্রয়োগ সম্পর্কে শিখুন।
+                </p>
+
+                <span class="lesson-button" id="button-13">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="14"
+                href="/quran/lesson/14"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        14
+                    </span>
+
+                    <span class="lesson-status" id="status-14">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    ইকলাব ও ইখফা
+                </div>
+
+                <p class="lesson-description">
+                    ইকলাব ও ইখফার মৌলিক নিয়ম অনুশীলন করুন।
+                </p>
+
+                <span class="lesson-button" id="button-14">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="15"
+                href="/quran/lesson/15"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        15
+                    </span>
+
+                    <span class="lesson-status" id="status-15">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    মীম সাকিন
+                </div>
+
+                <p class="lesson-description">
+                    মীম সাকিনের গুরুত্বপূর্ণ নিয়মগুলো শিখুন।
+                </p>
+
+                <span class="lesson-button" id="button-15">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="16"
+                href="/quran/lesson/16"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        16
+                    </span>
+
+                    <span class="lesson-status" id="status-16">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    গুন্নাহ ও ক্বলকলাহ
+                </div>
+
+                <p class="lesson-description">
+                    গুন্নাহ ও ক্বলকলাহর প্রাথমিক অনুশীলন করুন।
+                </p>
+
+                <span class="lesson-button" id="button-16">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="17"
+                href="/quran/lesson/17"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        17
+                    </span>
+
+                    <span class="lesson-status" id="status-17">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    তাফখীম ও তারকীক
+                </div>
+
+                <p class="lesson-description">
+                    কিছু গুরুত্বপূর্ণ হরফের ভারী ও হালকা উচ্চারণ বুঝুন।
+                </p>
+
+                <span class="lesson-button" id="button-17">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="18"
+                href="/quran/lesson/18"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        18
+                    </span>
+
+                    <span class="lesson-status" id="status-18">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    ওয়াকফ ও ইবতিদা
+                </div>
+
+                <p class="lesson-description">
+                    কোথায় থামবেন এবং কোথা থেকে শুরু করবেন তা শিখুন।
+                </p>
+
+                <span class="lesson-button" id="button-18">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="19"
+                href="/quran/lesson/19"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        19
+                    </span>
+
+                    <span class="lesson-status" id="status-19">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    শব্দ থেকে আয়াত পড়া
+                </div>
+
+                <p class="lesson-description">
+                    শব্দ থেকে ধীরে ধীরে পূর্ণ আয়াত পড়ার অনুশীলন করুন।
+                </p>
+
+                <span class="lesson-button" id="button-19">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+            <a
+                class="lesson-card"
+                data-lesson="20"
+                href="/quran/lesson/20"
+            >
+
+                <div class="lesson-head">
+
+                    <span class="lesson-number">
+                        20
+                    </span>
+
+                    <span class="lesson-status" id="status-20">
+                        🔒 শুরু করা হয়নি
+                    </span>
+
+                </div>
+
+                <div class="lesson-title">
+                    Revision ও Practice
+                </div>
+
+                <p class="lesson-description">
+                    আগের বিষয়গুলো Revision করে Practice করুন।
+                </p>
+
+                <span class="lesson-button" id="button-20">
+                    শুরু করুন →
+                </span>
+
+            </a>
+
+            
+
+        </div>
+
+    </section>
+
+
+    <!-- LEARNING METHOD -->
+    <section class="academy-section">
+
+        <div class="section-heading">
+            <div>
+                <h2>🧠 শেখার পদ্ধতি</h2>
+                <p>প্রতিটি পাঠে এই ধারাটি অনুসরণ করুন।</p>
+            </div>
+        </div>
+
+        <div class="method-grid">
+
+            <div class="method-card">
+                <span>👀</span>
+                <strong>দেখুন</strong>
+            </div>
+
+            <div class="method-card">
+                <span>🎧</span>
+                <strong>শুনুন</strong>
+            </div>
+
+            <div class="method-card">
+                <span>📖</span>
+                <strong>পড়ুন</strong>
+            </div>
+
+            <div class="method-card">
+                <span>✍️</span>
+                <strong>অনুশীলন</strong>
+            </div>
+
+            <div class="method-card">
+                <span>🎯</span>
+                <strong>Revision</strong>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- NOTE -->
+    <div class="academy-note">
+
+        <strong>💡 গুরুত্বপূর্ণ:</strong>
+
+        এই Academy ধাপে ধাপে শেখার সহায়ক ব্যবস্থা।
+        সঠিক মাখরাজ, তাজবিদ ও উচ্চারণ শেখার জন্য সম্ভব হলে
+        একজন যোগ্য কুরআন শিক্ষক বা কারির কাছ থেকেও শুনে ও যাচাই করে শেখা উত্তম।
+
+    </div>
+
+</main>
+
+
+<script>
+(function () {
+
+    const TOTAL = 20;
+    const STORAGE_KEY = "ai_zone_quran_progress_v1";
+
+    function getProgress() {
+        try {
+            const data = JSON.parse(
+                localStorage.getItem(STORAGE_KEY) || "[]"
+            );
+
+            if (!Array.isArray(data)) {
+                return [];
+            }
+
+            return data
+                .map(Number)
+                .filter(n => n >= 1 && n <= TOTAL);
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function saveProgress(list) {
+        const unique = [...new Set(list)].sort((a, b) => a - b);
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(unique)
+        );
+    }
+
+    function renderProgress() {
+
+        const completed = getProgress();
+
+        const count = completed.length;
+        const percent = Math.round((count / TOTAL) * 100);
+
+        document.getElementById("completedCount").textContent = count;
+        document.getElementById("progressNumber").textContent = percent + "%";
+        document.getElementById("progressPercent").textContent = percent + "%";
+        document.getElementById("progressFill").style.width = percent + "%";
+
+        let next = 1;
+
+        while (completed.includes(next) && next <= TOTAL) {
+            next++;
+        }
+
+        document.getElementById("nextLessonNumber").textContent =
+            next <= TOTAL ? next : "✓";
+
+        for (let i = 1; i <= TOTAL; i++) {
+
+            const card = document.querySelector(
+                '[data-lesson="' + i + '"]'
+            );
+
+            const status = document.getElementById(
+                "status-" + i
+            );
+
+            const button = document.getElementById(
+                "button-" + i
+            );
+
+            if (!card || !status || !button) {
+                continue;
+            }
+
+            if (completed.includes(i)) {
+
+                card.classList.add("completed");
+
+                status.textContent = "✓ সম্পন্ন";
+
+                button.textContent = "আবার পড়ুন →";
+
+            } else {
+
+                card.classList.remove("completed");
+
+                status.textContent =
+                    i === next
+                        ? "▶ পরবর্তী পাঠ"
+                        : "○ শুরু করা হয়নি";
+
+                button.textContent =
+                    i === next
+                        ? "চালিয়ে যান →"
+                        : "শুরু করুন →";
+            }
+        }
+    }
+
+    /*
+     * Dashboard only reads progress.
+     * Existing lesson pages remain untouched.
+     *
+     * A lesson can later call:
+     * window.AIZoneQuranComplete(lessonId)
+     * to mark itself completed.
+     */
+
+    window.AIZoneQuranComplete = function (lessonId) {
+
+        const id = Number(lessonId);
+
+        if (id < 1 || id > TOTAL) {
+            return;
+        }
+
+        const progress = getProgress();
+
+        if (!progress.includes(id)) {
+            progress.push(id);
+            saveProgress(progress);
+        }
+
+        renderProgress();
+    };
+
+    renderProgress();
+
+})();
+</script>
+
+
+<!-- AI-ZONE-QURAN-CARD-STATUS-START -->
+<style>
+.quran-live-status {
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:12px;
+}
+
+.quran-live-badge {
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:.74rem;
+    font-weight:700;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.055);
+}
+
+.quran-live-badge.complete {
+    border-color:rgba(34,197,94,.45);
+}
+
+.quran-live-badge.quiz {
+    border-color:rgba(59,130,246,.45);
+}
+
+@media (max-width:640px) {
+    .quran-live-badge {
+        font-size:.69rem;
+        padding:5px 8px;
+    }
+}
+</style>
+
+<script>
+(function () {
+    const PROGRESS_KEY = "ai_zone_quran_progress_v1";
+    const QUIZ_KEY = "ai_zone_quran_quiz_v1";
+
+    function read(key) {
+        try {
+            return JSON.parse(localStorage.getItem(key) || "{}");
+        } catch (e) {
+            return {};
+        }
+    }
+
+    function refreshLessonCards() {
+        const progress = read(PROGRESS_KEY);
+        const quizzes = read(QUIZ_KEY);
+
+        document.querySelectorAll("[data-quran-live-card]").forEach(card => {
+            const lessonId = Number(card.dataset.quranLiveCard);
+
+            const completed =
+                progress[String(lessonId)] === true ||
+                progress[lessonId] === true;
+
+            const quiz =
+                quizzes[String(lessonId)] ||
+                quizzes[lessonId];
+
+            let status = card.querySelector(".quran-live-status");
+
+            if (!status) {
+                status = document.createElement("div");
+                status.className = "quran-live-status";
+                card.appendChild(status);
+            }
+
+            status.innerHTML = "";
+
+            if (completed) {
+                const badge = document.createElement("span");
+                badge.className = "quran-live-badge complete";
+                badge.textContent = "✓ পাঠ সম্পন্ন";
+                status.appendChild(badge);
+            }
+
+            if (quiz && quiz.passed) {
+                const badge = document.createElement("span");
+                badge.className = "quran-live-badge quiz";
+                badge.textContent = "✓ Quiz Passed";
+                status.appendChild(badge);
+            }
+        });
+    }
+
+    window.AIZoneRefreshQuranLessonCards = refreshLessonCards;
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", refreshLessonCards);
+    } else {
+        refreshLessonCards();
+    }
+
+    window.addEventListener("storage", function (event) {
+        if (
+            event.key === PROGRESS_KEY ||
+            event.key === QUIZ_KEY
+        ) {
+            refreshLessonCards();
+        }
+    });
+})();
+</script>
+<!-- AI-ZONE-QURAN-CARD-STATUS-END -->
+
+
+
+<!-- AI-ZONE-QURAN-SMART-REVISION-START -->
+<section class="quran-smart-revision" id="quranSmartRevision">
+
+    <div class="revision-header">
+        <h2 class="revision-title">
+            🧠 Smart Revision
+        </h2>
+
+        <span class="revision-badge"
+              id="quranRevisionWeakCount">0</span>
+    </div>
+
+    <p class="revision-status" id="quranRevisionStatus">
+        Quiz result বিশ্লেষণ করা হচ্ছে…
+    </p>
+
+    <div class="revision-list" id="quranRevisionList">
+        <div class="revision-empty">
+            Revision queue প্রস্তুত হচ্ছে…
+        </div>
+    </div>
+
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.AIZoneQuranRevision) {
+        window.AIZoneQuranRevision.refresh();
+    }
+});
+</script>
+<!-- AI-ZONE-QURAN-SMART-REVISION-END -->
+
+
+
+<!-- AI-ZONE-QURAN-REVISION-PRIORITY-START -->
+
+<section
+    class="quran-revision-priority"
+    id="quranRevisionPriority"
+>
+
+    <div class="revision-header">
+        <h2 class="revision-title">
+            🎯 Revision Priority
+        </h2>
+    </div>
+
+    <p
+        class="revision-status"
+        id="quranRevisionPriorityStatus"
+    >
+        Revision priority প্রস্তুত হচ্ছে…
+    </p>
+
+    <div class="revision-priority-summary">
+
+        <div class="revision-priority-stat">
+            <strong id="quranRevisionHigh">0</strong>
+            <span>High</span>
+        </div>
+
+        <div class="revision-priority-stat">
+            <strong id="quranRevisionMedium">0</strong>
+            <span>Medium</span>
+        </div>
+
+        <div class="revision-priority-stat">
+            <strong id="quranRevisionLow">0</strong>
+            <span>Low</span>
+        </div>
+
+    </div>
+
+    <div
+        class="revision-priority-list"
+        id="quranRevisionPriorityList"
+    >
+        <div class="revision-priority-empty">
+            Revision queue প্রস্তুত হচ্ছে…
+        </div>
+    </div>
+
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.AIZoneQuranRevisionPriority) {
+        window.AIZoneQuranRevisionPriority.refresh();
+    }
+});
+</script>
+
+<!-- AI-ZONE-QURAN-REVISION-PRIORITY-END -->
+
+
+
+<!-- AI-ZONE-QURAN-MISTAKE-TRACKER-START -->
+
+<section
+    class="quran-mistake-tracker"
+    id="quranMistakeTracker"
+>
+
+    <h2 class="revision-title">
+        🧠 Mistake Tracker
+    </h2>
+
+    <div class="quran-mistake-summary">
+
+        <div
+            class="quran-mistake-number"
+            id="quranMistakeCount"
+        >0</div>
+
+        <div class="quran-mistake-label">
+            Weak Questions
+        </div>
+
+    </div>
+
+    <p
+        class="revision-status"
+        id="quranMistakeStatus"
+    >
+        Mistake Tracker প্রস্তুত হচ্ছে…
+    </p>
+
+    <div
+        class="quran-mistake-list"
+        id="quranMistakeList"
+    >
+        <div class="quran-mistake-empty">
+            Mistake data প্রস্তুত হচ্ছে…
+        </div>
+    </div>
+
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.AIZoneQuranMistakeTracker) {
+        window.AIZoneQuranMistakeTracker.refresh();
+    }
+});
+</script>
+
+<!-- AI-ZONE-QURAN-MISTAKE-TRACKER-END -->
+
+<!-- AI-ZONE-QURAN-REVISION-RETEST-START -->
+<section
+    id="quranRevisionRetest"
+    class="quran-revision-retest"
+    aria-label="Quran Revision Re-Test"
+>
+    <div>
+        <h2>🔁 Revision Re-Test</h2>
+        <p>
+            ভুল হওয়া lesson আবার অনুশীলন করুন,
+            তারপর Re-Test করে উন্নতি যাচাই করুন।
+        </p>
+    </div>
+
+    <div class="quran-retest-summary">
+        <div class="quran-retest-stat">
+            <strong id="quranRetestCount">0</strong>
+            <span>Re-Test Queue</span>
+        </div>
+
+        <div class="quran-retest-stat">
+            <strong id="quranRetestImproved">0</strong>
+            <span>Improved</span>
+        </div>
+
+        <div class="quran-retest-stat">
+            <strong id="quranRetestStillWeak">0</strong>
+            <span>Still Weak</span>
+        </div>
+    </div>
+
+    <div id="quranRetestStatus" class="quran-retest-status">
+        📚 Re-Test queue তৈরি হলে এখানে দেখা যাবে।
+    </div>
+
+    <div id="quranRetestList">
+        <div class="quran-retest-empty">
+            📖 Quiz ও mistake data তৈরি হলে queue দেখা যাবে।
+        </div>
+    </div>
+</section>
+<!-- AI-ZONE-QURAN-REVISION-RETEST-END -->
+
+</body>
+</html>
+
+<!-- AI-ZONE-QURAN-SMART-REVISION-CENTER-START -->
+<section class="quran-smart-revision-center" data-quran-smart-revision-center>
+
+  <div class="quran-smart-revision-head">
+    <div>
+      <span class="quran-smart-revision-kicker">SMART REVISION CENTER</span>
+      <h2>🔄 স্মার্ট Revision Center</h2>
+      <p>
+        আপনার Quiz, ভুল এবং Re-Test ফলাফল দেখে কোন পাঠ আগে Revision করা দরকার
+        তা এখানে সাজানো হবে।
+      </p>
+    </div>
+
+    <div class="quran-smart-revision-summary">
+      <span data-revision-total>0</span>
+      <small>Revision Items</small>
+    </div>
+  </div>
+
+  <div class="quran-smart-revision-stats">
+
+    <div class="revision-stat revision-high">
+      <span class="revision-stat-icon">🔴</span>
+      <strong data-revision-high>0</strong>
+      <small>High Priority</small>
+    </div>
+
+    <div class="revision-stat revision-medium">
+      <span class="revision-stat-icon">🟡</span>
+      <strong data-revision-medium>0</strong>
+      <small>Medium Priority</small>
+    </div>
+
+    <div class="revision-stat revision-improved">
+      <span class="revision-stat-icon">🟢</span>
+      <strong data-revision-improved>0</strong>
+      <small>Improved</small>
+    </div>
+
+    <div class="revision-stat revision-retest">
+      <span class="revision-stat-icon">🔄</span>
+      <strong data-revision-retest>0</strong>
+      <small>Re-Test</small>
+    </div>
+
+  </div>
+
+  <div class="quran-smart-revision-list" data-revision-list>
+    <div class="revision-empty" data-revision-empty>
+      <span>✨</span>
+      <strong>এখন কোনো Revision item নেই</strong>
+      <p>Quiz ও Practice চালিয়ে যান। প্রয়োজন হলে এখানে পাঠগুলো automatically দেখা যাবে।</p>
+    </div>
+  </div>
+
+</section>
+<!-- AI-ZONE-QURAN-SMART-REVISION-CENTER-END -->
+
+
+<!-- AI-ZONE-QURAN-LEARNING-HEALTH-START -->
+
+<section class="quran-learning-health" data-quran-learning-health>
+
+  <div class="quran-learning-health-head">
+    <div>
+      <span class="quran-learning-health-kicker">
+        ACADEMY LEARNING HEALTH
+      </span>
+
+      <h2>📊 আপনার Learning Health</h2>
+
+      <p>
+        আপনার বর্তমান Progress, Quiz, Revision এবং Re-Test status
+        এক জায়গায় দেখে শেখার অবস্থাটা বুঝুন।
+      </p>
+    </div>
+
+    <div class="quran-learning-health-score">
+      <strong data-health-score>0%</strong>
+      <span data-health-label>Getting Started</span>
+    </div>
+  </div>
+
+  <div class="quran-learning-health-grid">
+
+    <div class="health-card">
+      <span class="health-icon">📚</span>
+      <strong data-health-completed>0</strong>
+      <small>Completed Lessons</small>
+    </div>
+
+    <div class="health-card">
+      <span class="health-icon">✅</span>
+      <strong data-health-passed>0</strong>
+      <small>Quiz Passed</small>
+    </div>
+
+    <div class="health-card">
+      <span class="health-icon">🔄</span>
+      <strong data-health-revision>0</strong>
+      <small>Revision Needed</small>
+    </div>
+
+    <div class="health-card">
+      <span class="health-icon">📝</span>
+      <strong data-health-retest>0</strong>
+      <small>Re-Test Pending</small>
+    </div>
+
+    <div class="health-card">
+      <span class="health-icon">🔴</span>
+      <strong data-health-high>0</strong>
+      <small>High Priority</small>
+    </div>
+
+  </div>
+
+  <div class="quran-learning-health-message">
+    <div class="health-message-icon">💡</div>
+
+    <div>
+      <strong data-health-message-title>
+        শেখা শুরু করার জন্য প্রস্তুত
+      </strong>
+
+      <p data-health-message>
+        Lesson 1 থেকে ধীরে ধীরে শুরু করুন।
+      </p>
+    </div>
+  </div>
+
+</section>
+
+<!-- AI-ZONE-QURAN-LEARNING-HEALTH-END -->
