@@ -17,7 +17,22 @@
 <div class="grid">
   {% for t in tools %}
   <div class="card">
-    <span class="badge">{{ t['category'] }}</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+      <span class="badge">{{ t['category'] }}</span>
+
+      {% if t['free_status'] == 'Free' %}
+        <span class="badge" title="বর্তমানে ফ্রি ব্যবহার করা যায়">🟢 Free</span>
+      {% elif t['free_status'] == 'Free Tier' %}
+        <span class="badge" title="সীমিত ফ্রি ব্যবহার আছে">🔵 Free Tier</span>
+      {% elif t['free_status'] == 'Limited Free' %}
+        <span class="badge" title="সীমিত ফ্রি ব্যবহার আছে">🟡 Limited</span>
+      {% elif t['free_status'] == 'Free Trial' %}
+        <span class="badge" title="ফ্রি ট্রায়াল রয়েছে">⚪ Free Trial</span>
+      {% else %}
+        <span class="badge" title="বর্তমান ফ্রি স্ট্যাটাস যাচাই করা হচ্ছে">⚫ Verify</span>
+      {% endif %}
+    </div>
+
     <h3>{{ t['name'] }}</h3>
     <p>{{ t['description'] }}</p>
     <a href="{{ t['url'] }}" target="_blank" rel="noopener" class="btn-sm">অফিসিয়াল সাইট →</a>
